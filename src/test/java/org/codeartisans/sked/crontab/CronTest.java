@@ -11,7 +11,7 @@
  * limitations under the License.
  *
  */
-package org.codeartisans.sked;
+package org.codeartisans.sked.crontab;
 
 import org.joda.time.DateTime;
 

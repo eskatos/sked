@@ -1,17 +1,15 @@
 /*
- * Created on 7 déc. 2010
+ * Copyright (c) 2010, Paul Merlin. All Rights Reserved.
  *
- * Licenced under the Netheos Licence, Version 1.0 (the "Licence"); you may not use this file except
- * in compliance with the License. You may obtain a copy of the License at :
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  *
- * http://www.netheos.net/licences/LICENCE-1.0
- *
- * Unless required by applicable law or agreed to in writing, software distributed under the License
- * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
- * or implied. See the License for the specific language governing permissions and limitations under
- * the License.
- *
- * Copyright (c) Netheos
  */
 package org.codeartisans.sked.crontab.schedule;
 
@@ -33,6 +31,8 @@ import org.joda.time.DateTime;
  * And yes, the wikipedia page http://en.wikipedia.org/wiki/CRON_expression has
  * nothing to do with unix cron expression but only Quartz Scheduler expression
  * format.
+ * 
+ * @author Paul Merlin
  */
 public class CronSchedule
 {
@@ -146,23 +146,6 @@ public class CronSchedule
                 dayOfMonth = dayOfMonthAtom.minAllowed();
             }
 
-            //
-            // The day field in a cron expression spans the entire range of days
-            // in a month, which is from 1 to 31. However, the number of days in
-            // a month tend to be variable depending on the month (and the year
-            // in case of February). So a check is needed here to see if the
-            // date is a border case. If the day happens to be beyond 28
-            // (meaning that we're dealing with the suspicious range of 29-31)
-            // and the date part has changed then we need to determine whether
-            // the day still makes sense for the given year and month. If the
-            // day is beyond the last possible value, then the day/month part
-            // for the schedule is re-evaluated. So an expression like "0 0
-            // 15,31 * *" will yield the following sequence starting on midnight
-            // of Jan 1, 2000:
-            //
-            //  Jan 15, Jan 31, Feb 15, Mar 15, Apr 15, Apr 31, ...
-            //
-
             boolean dateChanged = dayOfMonth != baseDayOfMonth || month != baseMonth || year != baseYear;
 
             if ( dayOfMonth > 28 && dateChanged && dayOfMonth > daysOfMonth( year, month ) ) {
@@ -178,26 +161,16 @@ public class CronSchedule
 
         DateTime nextTime = new DateTime( year, month, dayOfMonth, hour, minute, second, 0 );
 
-        System.out.println( "===============" );
-        System.out.println( "dayOfWeekAtom.toString() " + dayOfWeekAtom.toString() );
-        System.out.println( "nextTime.getDayOfWeek: " + nextTime.getDayOfWeek() );
-        System.out.println( "dayOfWeekAtom.next( nextTime.getDayOfWeek() ): " + dayOfWeekAtom.next( nextTime.getDayOfWeek() ) );
-
-
         if ( dayOfWeekAtom.next( nextTime.getDayOfWeek() ) == nextTime.getDayOfWeek() ) {
             return nextTime;
         }
-
-
-        System.out.println( "WILL LOOOP, nextTime was: " + nextTime );
-        System.out.println( "===============" );
 
         return firstRunAfter( new DateTime( year, month, dayOfMonth, 23, 59, 0, 0 ) );
     }
 
     private static int daysOfMonth( int year, int month )
     {
-        DateTime dateTime = new DateTime( year, month, 14, 12, 0, 0, 000 );
+        DateTime dateTime = new DateTime( year, month, 15, 12, 0, 0, 0 );
         return dateTime.dayOfMonth().getMaximumValue();
     }
 
@@ -231,7 +204,7 @@ public class CronSchedule
         if ( cronExpression.length() != cronExpression.trim().length() ) {
             throw new IllegalArgumentException( "Cron expression has heading or trailing spaces" );
         }
-        String[] splittedExpression = CronExpressionUtil.split( CronExpressionUtil.parseSpecialStrings( cronExpression ) );
+        String[] splittedExpression = CronScheduleUtil.split( CronScheduleUtil.parseSpecialStrings( cronExpression ) );
         if ( splittedExpression.length != 7 ) {
             throw new IllegalArgumentException( "Cron expression did not resolve to a 7 atoms expression" );
         }

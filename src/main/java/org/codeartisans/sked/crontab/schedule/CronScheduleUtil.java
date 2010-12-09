@@ -20,7 +20,7 @@ import java.util.Map;
 /**
  * @author Paul Merlin
  */
-public final class CronExpressionUtil
+final class CronScheduleUtil
 {
 
     static final String YEARLY_SPECIAL = "@yearly";
@@ -48,7 +48,7 @@ public final class CronExpressionUtil
 
     private static final String SPLIT_REGEX = "\\s+";
 
-    public static String[] split( String cronExpression )
+    static String[] split( String cronExpression )
     {
         String[] splittedExpression = cronExpression.split( SPLIT_REGEX );
         if ( splittedExpression.length == 6 ) {
@@ -57,7 +57,7 @@ public final class CronExpressionUtil
         return splittedExpression;
     }
 
-    public static String parseSpecialStrings( String cronExpression )
+    static String parseSpecialStrings( String cronExpression )
     {
         String specialString = SPECIAL_STRINGS.get( cronExpression );
         if ( specialString == null ) {
@@ -66,7 +66,7 @@ public final class CronExpressionUtil
         return specialString;
     }
 
-    private CronExpressionUtil()
+    private CronScheduleUtil()
     {
     }
 

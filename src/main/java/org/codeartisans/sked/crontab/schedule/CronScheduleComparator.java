@@ -15,7 +15,6 @@ package org.codeartisans.sked.crontab.schedule;
 
 import java.util.Comparator;
 
-
 /**
  * @author Paul Merlin
  */
@@ -23,6 +22,7 @@ public class CronScheduleComparator
         implements Comparator<CronSchedule>
 {
 
+    @Override
     public int compare( CronSchedule o1, CronSchedule o2 )
     {
         long now = System.currentTimeMillis();
