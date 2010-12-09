@@ -16,6 +16,35 @@
     <packaging>jar</packaging>
     <url>http://github.com/Codeartisans/sked</url>
 
+    <dependencies>
+
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.6.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>joda-time</groupId>
+            <artifactId>joda-time</artifactId>
+            <version>1.6.2</version>
+        </dependency>
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.7</version>
+            <scope>test</scope>
+        </dependency>
+
+    </dependencies>
+
+    <scm>
+        <url>scm:git:git@github.com:Codeartisans/sked.git</url>
+        <connection>scm:git:git@github.com:Codeartisans/sked.git</connection>
+        <developerConnection>scm:git:git@github.com:Codeartisans/sked.git</developerConnection>
+    </scm>
+
     <licenses>
         <license>
             <name>The Apache Software License, Version 2.0</name>
@@ -25,12 +54,6 @@
         </license>
     </licenses>
 
-    <scm>
-        <url>scm:git:git@github.com:Codeartisans/sked.git</url>
-        <connection>scm:git:git@github.com:Codeartisans/sked.git</connection>
-        <developerConnection>scm:git:git@github.com:Codeartisans/sked.git</developerConnection>
-    </scm>
-
     <developers>
         <developer>
             <id>paul@nosphere.org</id>
@@ -38,14 +61,5 @@
             <email>paul@nosphere.org</email>
         </developer>
     </developers>
-
-    <dependencies>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.7</version>
-            <scope>test</scope>
-        </dependency>
-    </dependencies>
 
 </project>
