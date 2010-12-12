@@ -59,43 +59,43 @@ public class CronTest
 
         CronSchedule minutely = new CronSchedule( "@minutely" );
         assertEquals( "0 * * * * * *", minutely.toString() );
-        assertEquals( start.withMillisOfSecond( 0 ).withSecondOfMinute( 0 ).plusMinutes( 1 ),
-                      minutely.firstRunAfter( start ) );
+        assertEquals( Long.valueOf( start.withMillisOfSecond( 0 ).withSecondOfMinute( 0 ).plusMinutes( 1 ).getMillis() ),
+                      minutely.firstRunAfter( start.getMillis() ) );
 
         CronSchedule hourly = new CronSchedule( "@hourly" );
         assertEquals( "0 0 * * * * *", hourly.toString() );
-        assertEquals( start.withMillisOfSecond( 0 ).withSecondOfMinute( 0 ).withMinuteOfHour( 0 ).plusHours( 1 ),
-                      hourly.firstRunAfter( start ) );
+        assertEquals( Long.valueOf( start.withMillisOfSecond( 0 ).withSecondOfMinute( 0 ).withMinuteOfHour( 0 ).plusHours( 1 ).getMillis() ),
+                      hourly.firstRunAfter( start.getMillis() ) );
 
         CronSchedule midnight = new CronSchedule( "@midnight" );
         assertEquals( "0 0 0 * * * *", midnight.toString() );
-        assertEquals( start.withMillisOfDay( 0 ).plusDays( 1 ),
-                      midnight.firstRunAfter( start ) );
+        assertEquals( Long.valueOf( start.withMillisOfDay( 0 ).plusDays( 1 ).getMillis() ),
+                      midnight.firstRunAfter( start.getMillis() ) );
 
         CronSchedule daily = new CronSchedule( "@daily" );
         assertEquals( "0 0 0 * * * *", daily.toString() );
-        assertEquals( start.withMillisOfDay( 0 ).plusDays( 1 ),
-                      daily.firstRunAfter( start ) );
+        assertEquals( Long.valueOf( start.withMillisOfDay( 0 ).plusDays( 1 ).getMillis() ),
+                      daily.firstRunAfter( start.getMillis() ) );
 
         CronSchedule weekly = new CronSchedule( "@weekly" );
         assertEquals( "0 0 0 * * 0 *", weekly.toString() );
-        assertEquals( start.withMillisOfDay( 0 ).plusDays( start.dayOfWeek().getMaximumValue() - ( start.getDayOfWeek() == 7 ? 0 : start.getDayOfWeek() ) ),
-                      weekly.firstRunAfter( start ) );
+        assertEquals( Long.valueOf( start.withMillisOfDay( 0 ).plusDays( start.dayOfWeek().getMaximumValue() - ( start.getDayOfWeek() == 7 ? 0 : start.getDayOfWeek() ) ).getMillis() ),
+                      weekly.firstRunAfter( start.getMillis() ) );
 
         CronSchedule monthly = new CronSchedule( "@monthly" );
         assertEquals( "0 0 0 1 * * *", monthly.toString() );
-        assertEquals( start.withMillisOfDay( 0 ).plusMonths( 1 ).withDayOfMonth( 1 ),
-                      monthly.firstRunAfter( start ) );
+        assertEquals( Long.valueOf( start.withMillisOfDay( 0 ).plusMonths( 1 ).withDayOfMonth( 1 ).getMillis() ),
+                      monthly.firstRunAfter( start.getMillis() ) );
 
         CronSchedule annualy = new CronSchedule( "@annualy" );
         assertEquals( "0 0 0 1 1 * *", annualy.toString() );
-        assertEquals( start.withMillisOfDay( 0 ).withDayOfYear( 1 ).plusYears( 1 ),
-                      annualy.firstRunAfter( start ) );
+        assertEquals( Long.valueOf( start.withMillisOfDay( 0 ).withDayOfYear( 1 ).plusYears( 1 ).getMillis() ),
+                      annualy.firstRunAfter( start.getMillis() ) );
 
         CronSchedule yearly = new CronSchedule( "@yearly" );
         assertEquals( "0 0 0 1 1 * *", yearly.toString() );
-        assertEquals( start.withMillisOfDay( 0 ).withDayOfYear( 1 ).plusYears( 1 ),
-                      yearly.firstRunAfter( start ) );
+        assertEquals( Long.valueOf( start.withMillisOfDay( 0 ).withDayOfYear( 1 ).plusYears( 1 ).getMillis() ),
+                      yearly.firstRunAfter( start.getMillis() ) );
     }
 
     @Test

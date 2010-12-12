@@ -76,7 +76,7 @@ public class CronSchedule
         return nextRun.getMillis();
     }
 
-    public final DateTime firstRunAfter( DateTime start )
+    private DateTime firstRunAfter( DateTime start )
     {
         int nil = -1;
 
@@ -124,7 +124,6 @@ public class CronSchedule
         }
 
         // DayOfMonth
-
         dayOfMonth = dayOfMonthAtom.nextValue( dayOfMonth );
         boolean retry = true;
         while ( retry ) {
