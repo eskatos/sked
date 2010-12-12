@@ -38,6 +38,7 @@ abstract class AbstractCronAtom
     } );
     private boolean ommited = false;
 
+    @SuppressWarnings( "OverridableMethodCallInConstructor" ) // The class hierarchy is stable as all chidren in this package are final
     public AbstractCronAtom( String atom )
     {
         this.atom = atom;
@@ -105,24 +106,28 @@ abstract class AbstractCronAtom
         afterParseAtom();
     }
 
+    /**
+     * Used to implement the ? special char handling for DayOfWeek and DayOfMonth.
+     * @return If this atom can be ommited
+     */
+    protected boolean canBeOmmited()
+    {
+        return false;
+    }
+
     protected void afterParseAtom()
     {
         // NOOP
     }
 
     @Override
-    public int next( int start )
+    public int nextValue( int start )
     {
         SortedSet<Integer> tail = possibleValues.tailSet( start );
         if ( tail.isEmpty() ) {
             return -1;
         }
         return tail.first();
-    }
-
-    protected boolean canBeOmmited()
-    {
-        return false;
     }
 
     @Override
@@ -134,10 +139,14 @@ abstract class AbstractCronAtom
     @Override
     public abstract int maxAllowed();
 
-    @Override
-    public String toString()
+    private boolean containsSpecialChars( String atom )
     {
-        return atom;
+        for ( String eachSpecialChars : new String[]{ "*", ",", "/", "-" } ) {
+            if ( atom.contains( eachSpecialChars ) ) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private void addRangeToPossibleValues( int start, int stop )
@@ -152,14 +161,13 @@ abstract class AbstractCronAtom
         }
     }
 
-    private boolean containsSpecialChars( String atom )
+    /**
+     * @return The atom string used to create this instance.
+     */
+    @Override
+    public final String toString()
     {
-        for ( String eachSpecialChars : new String[]{ "*", ",", "/", "-" } ) {
-            if ( atom.contains( eachSpecialChars ) ) {
-                return true;
-            }
-        }
-        return false;
+        return atom;
     }
 
 }

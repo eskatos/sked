@@ -16,19 +16,13 @@ package org.codeartisans.sked.crontab.schedule;
 /**
  * @author Paul Merlin
  */
-public class DayOfMonthAtom
+final class DayOfMonthAtom
         extends AbstractCronAtom
 {
 
     public DayOfMonthAtom( String atom )
     {
         super( atom );
-    }
-
-    @Override
-    protected boolean canBeOmmited()
-    {
-        return true;
     }
 
     @Override
@@ -41,6 +35,12 @@ public class DayOfMonthAtom
     public int maxAllowed()
     {
         return 31;
+    }
+
+    @Override
+    protected boolean canBeOmmited()
+    {
+        return true;
     }
 
 }

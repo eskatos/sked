@@ -13,8 +13,6 @@
  */
 package org.codeartisans.sked.crontab.schedule;
 
-import java.util.regex.Pattern;
-
 import org.joda.time.DateTime;
 
 /**
@@ -25,17 +23,29 @@ import org.joda.time.DateTime;
  * <ul>
  *      <li>a mandatory field is added at the begining: seconds.</li>
  *      <li>a special string is added: @minutely</li>
+ *      <li>a special character is added: ? to choose between dayOfMonth and dayOfWeek</li>
  * </ul>
  *
- * So, no, it does not follow the Quartz Scheduler expression format.
- * And yes, the wikipedia page http://en.wikipedia.org/wiki/CRON_expression has
- * nothing to do with unix cron expression but only Quartz Scheduler expression
- * format.
+ * The ? special char has the same behavior as in the Quartz Scheduler expression.
+ * The wikipedia page http://en.wikipedia.org/wiki/CRON_expression explains Quartz
+ * Scheduler expression, not simple cron expressions. You'll find there about the ?
+ * special char and maybe that some other extensions you would like to use are missing
+ * in this project.
  * 
  * @author Paul Merlin
  */
 public class CronSchedule
 {
+
+    public static boolean isExpressionValid( String cronExpression )
+    {
+        try {
+            CronScheduleUtil.validateAndSplitExpression( cronExpression );
+            return true;
+        } catch ( IllegalArgumentException ex ) {
+        }
+        return false;
+    }
 
     private final CronAtom secondAtom;
     private final CronAtom minuteAtom;
@@ -47,7 +57,7 @@ public class CronSchedule
 
     public CronSchedule( String cronExpression )
     {
-        String[] splitted = validateAndSplitExpression( cronExpression );
+        String[] splitted = CronScheduleUtil.validateAndSplitExpression( cronExpression );
         secondAtom = new SecondAtom( splitted[0] );
         minuteAtom = new MinuteAtom( splitted[1] );
         hourAtom = new HourAtom( splitted[2] );
@@ -57,7 +67,7 @@ public class CronSchedule
         yearAtom = new YearAtom( splitted[6] );
     }
 
-    public Long firstRunAfter( Long start )
+    public final Long firstRunAfter( Long start )
     {
         DateTime nextRun = firstRunAfter( new DateTime( start ) );
         if ( nextRun == null ) {
@@ -66,7 +76,7 @@ public class CronSchedule
         return nextRun.getMillis();
     }
 
-    public DateTime firstRunAfter( DateTime start )
+    public final DateTime firstRunAfter( DateTime start )
     {
         int nil = -1;
 
@@ -85,14 +95,14 @@ public class CronSchedule
         int second = baseSecond;
 
         // Second
-        second = secondAtom.next( second );
+        second = secondAtom.nextValue( second );
         if ( second == nil ) {
             second = secondAtom.minAllowed();
             minute++;
         }
 
         // Minute
-        minute = minuteAtom.next( minute );
+        minute = minuteAtom.nextValue( minute );
         if ( minute == nil ) {
             second = secondAtom.minAllowed();
             minute = minuteAtom.minAllowed();
@@ -102,7 +112,7 @@ public class CronSchedule
         }
 
         // Hour
-        hour = hourAtom.next( hour );
+        hour = hourAtom.nextValue( hour );
         if ( hour == nil ) {
             second = secondAtom.minAllowed();
             minute = minuteAtom.minAllowed();
@@ -115,7 +125,7 @@ public class CronSchedule
 
         // DayOfMonth
 
-        dayOfMonth = dayOfMonthAtom.next( dayOfMonth );
+        dayOfMonth = dayOfMonthAtom.nextValue( dayOfMonth );
         boolean retry = true;
         while ( retry ) {
             if ( dayOfMonth == nil ) {
@@ -131,7 +141,7 @@ public class CronSchedule
             }
 
             // Month
-            month = monthAtom.next( month );
+            month = monthAtom.nextValue( month );
             if ( month == nil ) {
                 second = secondAtom.minAllowed();
                 minute = minuteAtom.minAllowed();
@@ -148,7 +158,7 @@ public class CronSchedule
 
             boolean dateChanged = dayOfMonth != baseDayOfMonth || month != baseMonth || year != baseYear;
 
-            if ( dayOfMonth > 28 && dateChanged && dayOfMonth > daysOfMonth( year, month ) ) {
+            if ( dayOfMonth > 28 && dateChanged && dayOfMonth > new DateTime( year, month, 15, 12, 0, 0, 0 ).dayOfMonth().getMaximumValue() ) {
                 dayOfMonth = nil;
             } else {
                 retry = false;
@@ -161,17 +171,11 @@ public class CronSchedule
 
         DateTime nextTime = new DateTime( year, month, dayOfMonth, hour, minute, second, 0 );
 
-        if ( dayOfWeekAtom.next( nextTime.getDayOfWeek() ) == nextTime.getDayOfWeek() ) {
+        if ( dayOfWeekAtom.nextValue( nextTime.getDayOfWeek() ) == nextTime.getDayOfWeek() ) {
             return nextTime;
         }
 
         return firstRunAfter( new DateTime( year, month, dayOfMonth, 23, 59, 0, 0 ) );
-    }
-
-    private static int daysOfMonth( int year, int month )
-    {
-        DateTime dateTime = new DateTime( year, month, 15, 12, 0, 0, 0 );
-        return dateTime.dayOfMonth().getMaximumValue();
     }
 
     @Override
@@ -184,116 +188,6 @@ public class CronSchedule
                 append( monthAtom ).append( " " ).
                 append( dayOfWeekAtom ).append( " " ).
                 append( yearAtom ).toString();
-    }
-
-    public static boolean isExpressionValid( String cronExpression )
-    {
-        try {
-            validateAndSplitExpression( cronExpression );
-            return true;
-        } catch ( IllegalArgumentException ex ) {
-        }
-        return false;
-    }
-
-    private static String[] validateAndSplitExpression( String cronExpression )
-    {
-        if ( cronExpression == null || cronExpression.length() <= 0 ) {
-            throw new IllegalArgumentException( "Cron expression is null or empty" );
-        }
-        if ( cronExpression.length() != cronExpression.trim().length() ) {
-            throw new IllegalArgumentException( "Cron expression has heading or trailing spaces" );
-        }
-        String[] splittedExpression = CronScheduleUtil.split( CronScheduleUtil.parseSpecialStrings( cronExpression ) );
-        if ( splittedExpression.length != 7 ) {
-            throw new IllegalArgumentException( "Cron expression did not resolve to a 7 atoms expression" );
-        }
-        for ( int idx = 0; idx < splittedExpression.length; idx++ ) {
-            String atom = splittedExpression[idx];
-            String regex;
-            switch ( idx ) {
-                case 0: // second
-                case 1: // minute
-                case 2: // hour
-                    regex = "[0-9\\-\\*,\\/]";
-                    break;
-                case 3: // dayOfMonth
-                    regex = "[0-9\\-\\*,\\/\\?LW]";
-                    break;
-                case 4: // month
-                    atom = replaceMonthNames( atom );
-                    splittedExpression[idx] = atom;
-                    regex = "[0-9\\-\\*,\\/]";
-                    break;
-                case 5: // dayOfWeek
-                    atom = replaceDayOfWeekNames( atom );
-                    splittedExpression[idx] = atom;
-                    regex = "[0-9\\-\\*,\\/\\?L#]";
-                    break;
-                case 6: // year
-                    regex = "[0-9\\-\\*,\\/]";
-                    break;
-                default:
-                    throw new IllegalStateException( "Guru meditation!" );
-            }
-            if ( atom.replaceAll( regex, "" ).trim().length() > 0 ) {
-                throw new IllegalArgumentException( "String atom contains unauthorized characaters: " + atom );
-            }
-        }
-        // TODO
-        return splittedExpression;
-    }
-
-    private static final Pattern JAN = Pattern.compile( "jan", Pattern.CASE_INSENSITIVE );
-    private static final Pattern FEB = Pattern.compile( "feb", Pattern.CASE_INSENSITIVE );
-    private static final Pattern MAR = Pattern.compile( "mar", Pattern.CASE_INSENSITIVE );
-    private static final Pattern APR = Pattern.compile( "apr", Pattern.CASE_INSENSITIVE );
-    private static final Pattern MAY = Pattern.compile( "may", Pattern.CASE_INSENSITIVE );
-    private static final Pattern JUN = Pattern.compile( "jun", Pattern.CASE_INSENSITIVE );
-    private static final Pattern JUL = Pattern.compile( "jul", Pattern.CASE_INSENSITIVE );
-    private static final Pattern AUG = Pattern.compile( "aug", Pattern.CASE_INSENSITIVE );
-    private static final Pattern SEP = Pattern.compile( "sep", Pattern.CASE_INSENSITIVE );
-    private static final Pattern OCT = Pattern.compile( "oct", Pattern.CASE_INSENSITIVE );
-    private static final Pattern NOV = Pattern.compile( "nov", Pattern.CASE_INSENSITIVE );
-    private static final Pattern DEC = Pattern.compile( "dec", Pattern.CASE_INSENSITIVE );
-
-    @SuppressWarnings( "AssignmentToMethodParameter" )
-    private static String replaceMonthNames( String atom )
-    {
-        atom = JAN.matcher( atom ).replaceAll( "1" );
-        atom = FEB.matcher( atom ).replaceAll( "2" );
-        atom = MAR.matcher( atom ).replaceAll( "3" );
-        atom = APR.matcher( atom ).replaceAll( "4" );
-        atom = MAY.matcher( atom ).replaceAll( "5" );
-        atom = JUN.matcher( atom ).replaceAll( "6" );
-        atom = JUL.matcher( atom ).replaceAll( "7" );
-        atom = AUG.matcher( atom ).replaceAll( "8" );
-        atom = SEP.matcher( atom ).replaceAll( "9" );
-        atom = OCT.matcher( atom ).replaceAll( "10" );
-        atom = NOV.matcher( atom ).replaceAll( "11" );
-        atom = DEC.matcher( atom ).replaceAll( "12" );
-        return atom;
-    }
-
-    private static final Pattern MON = Pattern.compile( "mon", Pattern.CASE_INSENSITIVE );
-    private static final Pattern TUE = Pattern.compile( "tue", Pattern.CASE_INSENSITIVE );
-    private static final Pattern WED = Pattern.compile( "wed", Pattern.CASE_INSENSITIVE );
-    private static final Pattern THU = Pattern.compile( "thu", Pattern.CASE_INSENSITIVE );
-    private static final Pattern FRI = Pattern.compile( "fri", Pattern.CASE_INSENSITIVE );
-    private static final Pattern SAT = Pattern.compile( "sat", Pattern.CASE_INSENSITIVE );
-    private static final Pattern SUN = Pattern.compile( "sun", Pattern.CASE_INSENSITIVE );
-
-    @SuppressWarnings( "AssignmentToMethodParameter" )
-    private static String replaceDayOfWeekNames( String atom )
-    {
-        atom = MON.matcher( atom ).replaceAll( "1" );
-        atom = TUE.matcher( atom ).replaceAll( "2" );
-        atom = WED.matcher( atom ).replaceAll( "3" );
-        atom = THU.matcher( atom ).replaceAll( "4" );
-        atom = FRI.matcher( atom ).replaceAll( "5" );
-        atom = SAT.matcher( atom ).replaceAll( "6" );
-        atom = SUN.matcher( atom ).replaceAll( "7" );
-        return atom;
     }
 
 }

@@ -16,7 +16,7 @@ package org.codeartisans.sked.crontab.schedule;
 /**
  * @author Paul Merlin
  */
-public class YearAtom
+class YearAtom
         extends AbstractCronAtom
 {
 
@@ -34,7 +34,7 @@ public class YearAtom
     @Override
     public int maxAllowed()
     {
-        return 2099; // We will need to rise this number when needed :)
+        return 2099; // We will need to rise this number when needed, see AbstractCronAtom.nextValue implementation
     }
 
 }

@@ -16,7 +16,7 @@ package org.codeartisans.sked.crontab.schedule;
 /**
  * @author Paul Merlin
  */
-public class MinuteAtom
+class MinuteAtom
         extends AbstractCronAtom
 {
 

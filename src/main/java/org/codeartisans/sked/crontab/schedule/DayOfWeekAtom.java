@@ -16,7 +16,7 @@ package org.codeartisans.sked.crontab.schedule;
 /**
  * @author Paul Merlin
  */
-public class DayOfWeekAtom
+final class DayOfWeekAtom
         extends AbstractCronAtom
 {
 
@@ -26,8 +26,15 @@ public class DayOfWeekAtom
     }
 
     @Override
+    public int maxAllowed()
+    {
+        return 7;
+    }
+
+    @Override
     protected void afterParseAtom()
     {
+        // O and 7 are the same day of week, prefer 7 as it is the one used by Date
         if ( possibleValues.contains( 0 ) ) {
             possibleValues.remove( 0 );
             possibleValues.add( 7 );
@@ -38,12 +45,6 @@ public class DayOfWeekAtom
     protected boolean canBeOmmited()
     {
         return true;
-    }
-
-    @Override
-    public int maxAllowed()
-    {
-        return 7;
     }
 
 }

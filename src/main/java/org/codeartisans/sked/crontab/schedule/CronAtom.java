@@ -16,19 +16,25 @@ package org.codeartisans.sked.crontab.schedule;
 /**
  * @author Paul Merlin
  */
-public interface CronAtom
+interface CronAtom
 {
 
     /**
      * Find the next occurence of this atom.
      *
      * @param start     From where this atom start searching, this is inclusive.
-     * @return          The next occurence of this atom, -1 if none.
+     * @return          The nextValue occurence of this atom, -1 if none.
      */
-    int next( int start );
+    int nextValue( int start );
 
+    /**
+     * @return The minimum allowed value for this atom
+     */
     int minAllowed();
 
+    /**
+     * @return The maximum allowed value for this atom
+     */
     int maxAllowed();
 
 }
