@@ -79,7 +79,7 @@ public class CronTest
 
         CronSchedule weekly = new CronSchedule( "@weekly" );
         assertEquals( "0 0 0 * * 0 *", weekly.toString() );
-        assertEquals( start.withMillisOfDay( 0 ).plusDays( start.dayOfWeek().getMaximumValue() - start.getDayOfWeek() ),
+        assertEquals( start.withMillisOfDay( 0 ).plusDays( start.dayOfWeek().getMaximumValue() - ( start.getDayOfWeek() == 7 ? 0 : start.getDayOfWeek() ) ),
                       weekly.firstRunAfter( start ) );
 
         CronSchedule monthly = new CronSchedule( "@monthly" );
@@ -105,23 +105,6 @@ public class CronTest
         new CronSchedule( "2-4,10-30/2 */2 * ? * 3 *" );
         new CronSchedule( "0 0 23 ? * MON-fRi" );
         new CronSchedule( "0 2/3 1,9,22 11-26 1-6 ? 2003" );
-    }
-
-    @Test
-    public void test()
-    {
-        DateTime start = new DateTime();
-        DateTime expected = start.withMillisOfSecond( 0 ).withSecondOfMinute( 0 ).plusMinutes( 1 );
-        CronSchedule cronSchedule = new CronSchedule( "@minutely" );
-        Long nextRun = cronSchedule.firstRunAfter( start ).getMillis();
-
-        System.out.println( "====================================" );
-        System.out.println( start );
-        System.out.println( expected );
-        System.out.println( nextRun );
-        System.out.println( new DateTime( nextRun ) );
-        System.out.println( "====================================" );
-
     }
 
 }

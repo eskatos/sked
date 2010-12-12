@@ -13,10 +13,10 @@
  */
 package org.codeartisans.sked.crontab;
 
+import java.util.Comparator;
 import java.util.TreeMap;
 
 import org.codeartisans.sked.crontab.schedule.CronSchedule;
-import org.codeartisans.sked.crontab.schedule.CronScheduleComparator;
 
 /**
  * @author Paul Merlin
@@ -28,7 +28,17 @@ public class CrontabImpl
 
     public CrontabImpl()
     {
-        super( new CronScheduleComparator() );
+        super( new Comparator<CronSchedule>()
+        {
+
+            @Override
+            public int compare( CronSchedule o1, CronSchedule o2 )
+            {
+                long now = System.currentTimeMillis();
+                return o1.firstRunAfter( now ).compareTo( o2.firstRunAfter( now ) );
+            }
+
+        } );
     }
 
 }
