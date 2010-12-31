@@ -11,34 +11,13 @@
  * limitations under the License.
  *
  */
-package org.codeartisans.sked.crontab.schedule;
+package org.codeartisans.sked;
 
 /**
- * @author Paul Merlin
+ * Only used for loggers.
  */
-final class SecondAtom
-        extends AbstractCronAtom
+public interface Sked
 {
 
-    public SecondAtom( String atom )
-    {
-        super( atom );
-    }
-
-    @Override
-    public int maxAllowed()
-    {
-        return 59;
-    }
-
-    @Override
-    public int nextValue( int start )
-    {
-        // Special here because second is the base atom
-        if ( possibleValues.size() == 1 && possibleValues.first().equals( start ) ) {
-            return -1;
-        }
-        return super.nextValue( start );
-    }
-
+    String LOGGER_NAME = Sked.class.getPackage().getName();
 }

@@ -17,9 +17,6 @@ import java.util.Comparator;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-/**
- * @author Paul Merlin
- */
 @SuppressWarnings( "ProtectedField" )
 abstract class AbstractCronAtom
         implements CronAtom

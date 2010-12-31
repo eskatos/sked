@@ -13,16 +13,13 @@
  */
 package org.codeartisans.sked.crontab;
 
+import org.codeartisans.sked.crontab.schedule.CronSchedule;
+
 import org.joda.time.DateTime;
 
 import static org.junit.Assert.*;
 import org.junit.Test;
 
-import org.codeartisans.sked.crontab.schedule.CronSchedule;
-
-/**
- * @author Paul Merlin
- */
 @SuppressWarnings( "ResultOfObjectAllocationIgnored" )
 public class CronTest
 {
@@ -105,6 +102,18 @@ public class CronTest
         new CronSchedule( "2-4,10-30/2 */2 * ? * 3 *" );
         new CronSchedule( "0 0 23 ? * MON-fRi" );
         new CronSchedule( "0 2/3 1,9,22 11-26 1-6 ? 2003" );
+    }
+
+    @Test
+    public void testSecondCornerCase()
+    {
+        CronSchedule minutely = new CronSchedule( "@minutely" );
+        Long cornerCase = 1292957700053L;
+        Long nextRun = minutely.firstRunAfter( cornerCase );
+        assertTrue( nextRun > cornerCase );
+        DateTime weirdoDateTime = new DateTime( cornerCase );
+        assertEquals( Long.valueOf( weirdoDateTime.withMillisOfSecond( 0 ).withSecondOfMinute( 0 ).plusMinutes( 1 ).getMillis() ),
+                      nextRun );
     }
 
 }
