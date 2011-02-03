@@ -45,9 +45,9 @@
     </dependencies>
 
     <scm>
-        <url>scm:git:git@github.com:Codeartisans/sked.git</url>
-        <connection>scm:git:git@github.com:Codeartisans/sked.git</connection>
-        <developerConnection>scm:git:git@github.com:Codeartisans/sked.git</developerConnection>
+        <url>scm:git:git@github.com:eskatos/sked.git</url>
+        <connection>scm:git:git@github.com:eskatos/sked.git</connection>
+        <developerConnection>scm:git:git@github.com:eskatos/sked.git</developerConnection>
     </scm>
 
     <licenses>
