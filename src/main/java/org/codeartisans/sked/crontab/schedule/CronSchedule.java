@@ -55,13 +55,13 @@ public final class CronSchedule
 
     private static final Logger LOGGER = LoggerFactory.getLogger( Sked.LOGGER_NAME );
     private String expression;
-    private CronAtom secondAtom;
-    private CronAtom minuteAtom;
-    private CronAtom hourAtom;
-    private CronAtom dayOfMonthAtom;
-    private CronAtom monthAtom;
-    private CronAtom dayOfWeekAtom;
-    private CronAtom yearAtom;
+    private transient CronAtom secondAtom;
+    private transient CronAtom minuteAtom;
+    private transient CronAtom hourAtom;
+    private transient CronAtom dayOfMonthAtom;
+    private transient CronAtom monthAtom;
+    private transient CronAtom dayOfWeekAtom;
+    private transient CronAtom yearAtom;
     private boolean loaded = false;
 
     public CronSchedule( String cronExpression )

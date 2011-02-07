@@ -16,7 +16,7 @@ TODO
 Changelog
 ---------
 
-### sked-1.1 - Released 2011/02/07
+### sked-1.2 - Released 2011/02/07
 
 - Added a CronScheduleFactory with convenience methods to ease cron expression generation
 - CronSchedule instances are now Serializable.
