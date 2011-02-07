@@ -13,14 +13,9 @@
  */
 package org.codeartisans.sked.crontab.schedule;
 
-/**
- * @author Paul Merlin
- */
 final class HourAtom
         extends AbstractCronAtom
 {
-
-    private static final long serialVersionUID = 1L;
 
     public HourAtom( String atom )
     {

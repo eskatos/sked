@@ -14,6 +14,7 @@
 package org.codeartisans.sked.crontab.schedule;
 
 import java.io.Serializable;
+
 import org.codeartisans.sked.Sked;
 
 import org.joda.time.DateTime;
@@ -38,11 +39,9 @@ import org.slf4j.LoggerFactory;
  * special char and maybe that some other extensions you would like to use are missing
  * in this project.
  */
-public class CronSchedule
+public final class CronSchedule
         implements Serializable
 {
-
-    private static final long serialVersionUID = 1L;
 
     public static boolean isExpressionValid( String cronExpression )
     {
@@ -55,22 +54,31 @@ public class CronSchedule
     }
 
     private static final Logger LOGGER = LoggerFactory.getLogger( Sked.LOGGER_NAME );
-
-    private final CronAtom secondAtom;
-
-    private final CronAtom minuteAtom;
-
-    private final CronAtom hourAtom;
-
-    private final CronAtom dayOfMonthAtom;
-
-    private final CronAtom monthAtom;
-
-    private final CronAtom dayOfWeekAtom;
-
-    private final CronAtom yearAtom;
+    private String expression;
+    private CronAtom secondAtom;
+    private CronAtom minuteAtom;
+    private CronAtom hourAtom;
+    private CronAtom dayOfMonthAtom;
+    private CronAtom monthAtom;
+    private CronAtom dayOfWeekAtom;
+    private CronAtom yearAtom;
+    private boolean loaded = false;
 
     public CronSchedule( String cronExpression )
+    {
+        load( cronExpression );
+    }
+
+    private CronSchedule loaded()
+    {
+        if ( !loaded ) {
+            load( expression );
+            loaded = true;
+        }
+        return this;
+    }
+
+    private void load( String cronExpression )
     {
         String[] splitted = CronScheduleUtil.validateAndSplitExpression( cronExpression );
         secondAtom = new SecondAtom( splitted[0] );
@@ -80,9 +88,16 @@ public class CronSchedule
         monthAtom = new MonthAtom( splitted[4] );
         dayOfWeekAtom = new DayOfWeekAtom( splitted[5] );
         yearAtom = new YearAtom( splitted[6] );
+        expression = new StringBuilder().append( secondAtom ).append( " " ).
+                append( minuteAtom ).append( " " ).
+                append( hourAtom ).append( " " ).
+                append( dayOfMonthAtom ).append( " " ).
+                append( monthAtom ).append( " " ).
+                append( dayOfWeekAtom ).append( " " ).
+                append( yearAtom ).toString();
     }
 
-    public final Long firstRunAfter( Long start )
+    public Long firstRunAfter( Long start )
     {
         DateTime nextRun = firstRunAfter( new DateTime( start ) );
         if ( nextRun == null ) {
@@ -110,10 +125,10 @@ public class CronSchedule
         int second = baseSecond;
 
         // Second
-        second = secondAtom.nextValue( second );
+        second = loaded().secondAtom.nextValue( second );
         if ( second == nil ) {
 
-            second = secondAtom.minAllowed();
+            second = loaded().secondAtom.minAllowed();
             minute++;
 
             LOGGER.trace( "CronSchedule.firstRunAfter({}) nextSecond was -1, set to {} and minute to {}",
@@ -123,18 +138,18 @@ public class CronSchedule
         }
 
         // Minute
-        minute = minuteAtom.nextValue( minute );
+        minute = loaded().minuteAtom.nextValue( minute );
         if ( minute == nil ) {
 
-            second = secondAtom.minAllowed();
-            minute = minuteAtom.minAllowed();
+            second = loaded().secondAtom.minAllowed();
+            minute = loaded().minuteAtom.minAllowed();
             hour++;
 
             LOGGER.trace( "CronSchedule.firstRunAfter({}) nextMinute was -1, set to {}, second to {} and hour to {}",
                           new Object[]{ start, minute, second, hour } );
         } else if ( minute > baseMinute ) {
 
-            second = secondAtom.minAllowed();
+            second = loaded().secondAtom.minAllowed();
 
             LOGGER.trace( "CronSchedule.firstRunAfter({}) nextMinute was before baseMinute, set second to {}", start, second );
         } else {
@@ -142,47 +157,47 @@ public class CronSchedule
         }
 
         // Hour
-        hour = hourAtom.nextValue( hour );
+        hour = loaded().hourAtom.nextValue( hour );
         if ( hour == nil ) {
-            second = secondAtom.minAllowed();
-            minute = minuteAtom.minAllowed();
-            hour = hourAtom.minAllowed();
+            second = loaded().secondAtom.minAllowed();
+            minute = loaded().minuteAtom.minAllowed();
+            hour = loaded().hourAtom.minAllowed();
             dayOfMonth++;
         } else if ( hour > baseHour ) {
-            second = secondAtom.minAllowed();
-            minute = minuteAtom.minAllowed();
+            second = loaded().secondAtom.minAllowed();
+            minute = loaded().minuteAtom.minAllowed();
         }
 
         // DayOfMonth
-        dayOfMonth = dayOfMonthAtom.nextValue( dayOfMonth );
+        dayOfMonth = loaded().dayOfMonthAtom.nextValue( dayOfMonth );
         boolean retry = true;
         while ( retry ) {
             if ( dayOfMonth == nil ) {
-                second = secondAtom.minAllowed();
-                minute = minuteAtom.minAllowed();
-                hour = hourAtom.minAllowed();
-                dayOfMonth = dayOfMonthAtom.minAllowed();
+                second = loaded().secondAtom.minAllowed();
+                minute = loaded().minuteAtom.minAllowed();
+                hour = loaded().hourAtom.minAllowed();
+                dayOfMonth = loaded().dayOfMonthAtom.minAllowed();
                 month++;
             } else if ( dayOfMonth > baseDayOfMonth ) {
-                second = secondAtom.minAllowed();
-                minute = minuteAtom.minAllowed();
-                hour = hourAtom.minAllowed();
+                second = loaded().secondAtom.minAllowed();
+                minute = loaded().minuteAtom.minAllowed();
+                hour = loaded().hourAtom.minAllowed();
             }
 
             // Month
-            month = monthAtom.nextValue( month );
+            month = loaded().monthAtom.nextValue( month );
             if ( month == nil ) {
-                second = secondAtom.minAllowed();
-                minute = minuteAtom.minAllowed();
-                hour = hourAtom.minAllowed();
-                dayOfMonth = dayOfMonthAtom.minAllowed();
-                month = monthAtom.minAllowed();
+                second = loaded().secondAtom.minAllowed();
+                minute = loaded().minuteAtom.minAllowed();
+                hour = loaded().hourAtom.minAllowed();
+                dayOfMonth = loaded().dayOfMonthAtom.minAllowed();
+                month = loaded().monthAtom.minAllowed();
                 year++;
             } else if ( month > baseMonth ) {
-                second = secondAtom.minAllowed();
-                minute = minuteAtom.minAllowed();
-                hour = hourAtom.minAllowed();
-                dayOfMonth = dayOfMonthAtom.minAllowed();
+                second = loaded().secondAtom.minAllowed();
+                minute = loaded().minuteAtom.minAllowed();
+                hour = loaded().hourAtom.minAllowed();
+                dayOfMonth = loaded().dayOfMonthAtom.minAllowed();
             }
 
             boolean dateChanged = dayOfMonth != baseDayOfMonth || month != baseMonth || year != baseYear;
@@ -199,14 +214,14 @@ public class CronSchedule
 
         }
 
-        if ( year > yearAtom.maxAllowed() ) {
+        if ( year > loaded().yearAtom.maxAllowed() ) {
             LOGGER.trace( "CronSchedule.firstRunAfter({}) Resolved is out of scope, returning null", start ); // FIXME Better log message
             return null;
         }
 
         DateTime nextTime = new DateTime( year, month, dayOfMonth, hour, minute, second, 0 );
 
-        if ( dayOfWeekAtom.nextValue( nextTime.getDayOfWeek() ) == nextTime.getDayOfWeek() ) {
+        if ( loaded().dayOfWeekAtom.nextValue( nextTime.getDayOfWeek() ) == nextTime.getDayOfWeek() ) {
             LOGGER.trace( "CronSchedule.firstRunAfter({}) Got it! Returning {}", start, nextTime );
             return nextTime;
         }
@@ -217,13 +232,7 @@ public class CronSchedule
     @Override
     public String toString()
     {
-        return new StringBuilder().append( secondAtom ).append( " " ).
-                append( minuteAtom ).append( " " ).
-                append( hourAtom ).append( " " ).
-                append( dayOfMonthAtom ).append( " " ).
-                append( monthAtom ).append( " " ).
-                append( dayOfWeekAtom ).append( " " ).
-                append( yearAtom ).toString();
+        return loaded().expression;
     }
 
 }

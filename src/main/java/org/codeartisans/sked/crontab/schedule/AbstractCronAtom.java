@@ -21,12 +21,8 @@ abstract class AbstractCronAtom
         implements CronAtom
 {
 
-    private static final long serialVersionUID = 1L;
-
     protected final String atom;
-
     protected final SortedSet<Integer> possibleValues = new TreeSet<Integer>();
-
     private boolean ommited = false;
 
     @SuppressWarnings( "OverridableMethodCallInConstructor" ) // The class hierarchy is stable as all chidren in this package are final

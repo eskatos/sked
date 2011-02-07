@@ -13,14 +13,9 @@
  */
 package org.codeartisans.sked.crontab.schedule;
 
-/**
- * @author Paul Merlin
- */
 final class SecondAtom
         extends AbstractCronAtom
 {
-
-    private static final long serialVersionUID = 1L;
 
     public SecondAtom( String atom )
     {
