@@ -26,6 +26,8 @@ public class CrontabImpl
         implements Crontab
 {
 
+    private static final long serialVersionUID = 1L;
+
     public CrontabImpl()
     {
         super( new Comparator<CronSchedule>()

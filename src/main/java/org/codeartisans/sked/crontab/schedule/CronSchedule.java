@@ -13,6 +13,7 @@
  */
 package org.codeartisans.sked.crontab.schedule;
 
+import java.io.Serializable;
 import org.codeartisans.sked.Sked;
 
 import org.joda.time.DateTime;
@@ -38,7 +39,10 @@ import org.slf4j.LoggerFactory;
  * in this project.
  */
 public class CronSchedule
+        implements Serializable
 {
+
+    private static final long serialVersionUID = 1L;
 
     public static boolean isExpressionValid( String cronExpression )
     {
@@ -51,12 +55,19 @@ public class CronSchedule
     }
 
     private static final Logger LOGGER = LoggerFactory.getLogger( Sked.LOGGER_NAME );
+
     private final CronAtom secondAtom;
+
     private final CronAtom minuteAtom;
+
     private final CronAtom hourAtom;
+
     private final CronAtom dayOfMonthAtom;
+
     private final CronAtom monthAtom;
+
     private final CronAtom dayOfWeekAtom;
+
     private final CronAtom yearAtom;
 
     public CronSchedule( String cronExpression )

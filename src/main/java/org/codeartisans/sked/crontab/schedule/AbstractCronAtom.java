@@ -13,7 +13,6 @@
  */
 package org.codeartisans.sked.crontab.schedule;
 
-import java.util.Comparator;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -22,17 +21,12 @@ abstract class AbstractCronAtom
         implements CronAtom
 {
 
+    private static final long serialVersionUID = 1L;
+
     protected final String atom;
-    protected final SortedSet<Integer> possibleValues = new TreeSet<Integer>( new Comparator<Integer>()
-    {
 
-        @Override
-        public int compare( Integer o1, Integer o2 )
-        {
-            return o1.compareTo( o2 );
-        }
+    protected final SortedSet<Integer> possibleValues = new TreeSet<Integer>();
 
-    } );
     private boolean ommited = false;
 
     @SuppressWarnings( "OverridableMethodCallInConstructor" ) // The class hierarchy is stable as all chidren in this package are final

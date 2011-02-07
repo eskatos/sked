@@ -20,6 +20,8 @@ final class DayOfMonthAtom
         extends AbstractCronAtom
 {
 
+    private static final long serialVersionUID = 1L;
+
     public DayOfMonthAtom( String atom )
     {
         super( atom );

@@ -20,6 +20,8 @@ final class MonthAtom
         extends AbstractCronAtom
 {
 
+    private static final long serialVersionUID = 1L;
+
     public MonthAtom( String atom )
     {
         super( atom );

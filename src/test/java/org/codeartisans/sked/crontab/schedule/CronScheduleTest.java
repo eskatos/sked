@@ -11,18 +11,36 @@
  * limitations under the License.
  *
  */
-package org.codeartisans.sked.crontab;
+package org.codeartisans.sked.crontab.schedule;
 
-import org.codeartisans.sked.crontab.schedule.CronSchedule;
+import java.io.IOException;
+
+import static org.codeartisans.junit.Assert.*;
 
 import org.joda.time.DateTime;
 
-import static org.junit.Assert.*;
 import org.junit.Test;
 
 @SuppressWarnings( "ResultOfObjectAllocationIgnored" )
-public class CronTest
+public class CronScheduleTest
 {
+
+    @Test
+    public void testSerialization()
+            throws IOException, ClassNotFoundException
+    {
+        final CronSchedule tested = new CronSchedule( "@minutely" );
+        assertSerializable( tested, new PostSerializationAssertions<CronSchedule>()
+        {
+
+            @Override
+            public void postSerializationAssertions( CronSchedule copy )
+            {
+                assertEquals( tested.toString(), copy.toString() );
+            }
+
+        } );
+    }
 
     @Test
     public void testWrongExpressions()

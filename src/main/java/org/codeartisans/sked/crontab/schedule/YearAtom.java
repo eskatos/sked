@@ -20,6 +20,8 @@ class YearAtom
         extends AbstractCronAtom
 {
 
+    private static final long serialVersionUID = 1L;
+
     public YearAtom( String atom )
     {
         super( atom );

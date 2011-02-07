@@ -20,6 +20,8 @@ final class SecondAtom
         extends AbstractCronAtom
 {
 
+    private static final long serialVersionUID = 1L;
+
     public SecondAtom( String atom )
     {
         super( atom );

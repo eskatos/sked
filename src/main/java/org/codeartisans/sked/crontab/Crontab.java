@@ -13,6 +13,7 @@
  */
 package org.codeartisans.sked.crontab;
 
+import java.io.Serializable;
 import java.util.SortedMap;
 
 import org.codeartisans.sked.crontab.schedule.CronSchedule;
@@ -21,6 +22,6 @@ import org.codeartisans.sked.crontab.schedule.CronSchedule;
  * @author Paul Merlin
  */
 public interface Crontab
-        extends SortedMap<CronSchedule, Runnable>
+        extends SortedMap<CronSchedule, Runnable>, Serializable
 {
 }

@@ -13,10 +13,13 @@
  */
 package org.codeartisans.sked.crontab.schedule;
 
+import java.io.Serializable;
+
 /**
  * @author Paul Merlin
  */
 interface CronAtom
+        extends Serializable
 {
 
     /**
