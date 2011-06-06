@@ -14,7 +14,12 @@
 package org.codeartisans.sked;
 
 /**
- * Only used for loggers.
+ * Sked.
+ *
+ * See {@link CronSchedule}.
+ *
+ * This type is only used for loggers. Use "org.codeartisans.sked" to set
+ * the level of all logs done in this project.
  */
 public interface Sked
 {

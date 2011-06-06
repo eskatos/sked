@@ -19,7 +19,14 @@ import java.util.SortedMap;
 import org.codeartisans.sked.crontab.schedule.CronSchedule;
 
 /**
- * @author Paul Merlin
+ * Collection of CronSchedule and Runnables.
+ *
+ * Things to know:
+ * <ul>
+ *  <li></li>
+ *  <li></li>
+ * </ul>
+ *
  */
 public interface Crontab
         extends SortedMap<CronSchedule, Runnable>, Serializable
