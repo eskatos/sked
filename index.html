@@ -1,0 +1,88 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>sked by eskatos</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>sked</h1>
+        <p>sked contains java code related to scheduling</p>
+
+        <p class="view"><a href="https://github.com/eskatos/sked">View the Project on GitHub <small>eskatos/sked</small></a></p>
+
+
+        <ul>
+          <li><a href="https://github.com/eskatos/sked/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/eskatos/sked/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/eskatos/sked">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h1>sked</h1>
+
+<p>sked contains java code related to scheduling.</p>
+
+<p>Cron expression parsing is based on the GNU crontab manpage that can be found
+here: <a href="http://unixhelp.ed.ac.uk/CGI/man-cgi?crontab+5">http://unixhelp.ed.ac.uk/CGI/man-cgi?crontab+5</a></p>
+
+<p>The following extensions are used:</p>
+
+<ul>
+<li>a mandatory field is added at the begining: seconds.</li>
+<li>a special string is added: @minutely</li>
+<li>a special character is added: ? to choose between dayOfMonth and dayOfWeek</li>
+</ul><p>The ? special char has the same behavior as in the Quartz Scheduler expression.
+The wikipedia page <a href="http://en.wikipedia.org/wiki/CRON_expression">http://en.wikipedia.org/wiki/CRON_expression</a> explains Quartz
+Scheduler expression, not simple cron expressions. You'll find there about the ?
+special char and maybe that some other extensions you would like to use are missing
+in this project.</p>
+
+<p>The project is hosted in maven central.
+<a href="https://repository.sonatype.org/index.html#nexus-search;quick%7Esked">here</a> you'll find a quick copy/paste for the dependency.</p>
+
+<h2>Changelog</h2>
+
+<h3>sked-1.2 - Released 2011/02/07</h3>
+
+<ul>
+<li>Added a CronScheduleFactory with convenience methods to ease cron expression generation</li>
+<li>CronSchedule instances are now Serializable.</li>
+</ul><h3>sked-1.1 - Released 2010/12/31</h3>
+
+<ul>
+<li>Fixed a corner case bug in CronSchedule.firstRunAfter( timestamp ) when timestamp is less than a second ahead of previous run</li>
+</ul><h3>sked-1.0 - Released 2010/12/12</h3>
+
+<ul>
+<li>Initial release, <em>do not use</em>, contains a bug fixed in 1.1</li>
+</ul>
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/eskatos">eskatos</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="javascripts/scale.fix.js"></script>
+              <script type="text/javascript">
+            var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+            document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+          </script>
+          <script type="text/javascript">
+            try {
+              var pageTracker = _gat._getTracker("UA-36048640-3");
+            pageTracker._trackPageview();
+            } catch(err) {}
+          </script>
+
+  </body>
+</html>
