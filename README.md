@@ -1,16 +1,25 @@
 sked
 ====
 
-sked contains java code related to scheduling
+sked contains java code related to scheduling.
+
+Cron expression parsing is based on the GNU crontab manpage that can be found
+here: http://unixhelp.ed.ac.uk/CGI/man-cgi?crontab+5
+ 
+The following extensions are used:
+
+- a mandatory field is added at the begining: seconds.
+- a special string is added: @minutely
+- a special character is added: ? to choose between dayOfMonth and dayOfWeek
+
+The ? special char has the same behavior as in the Quartz Scheduler expression.
+The wikipedia page http://en.wikipedia.org/wiki/CRON_expression explains Quartz
+Scheduler expression, not simple cron expressions. You'll find there about the ?
+special char and maybe that some other extensions you would like to use are missing
+in this project.
 
 The project is hosted in maven central.
 [here](https://repository.sonatype.org/index.html#nexus-search;quick~sked) you'll find a quick copy/paste for the dependency.
-
-
-TODO
-----
-
-- Deploy javadocs in github pages
 
 
 Changelog
