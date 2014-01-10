@@ -18,7 +18,6 @@
 package org.codeartisans.sked.cron;
 
 import java.io.Serializable;
-import org.codeartisans.sked.Sked;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -56,7 +55,7 @@ public final class CronSchedule
         return false;
     }
 
-    private static final Logger LOGGER = LoggerFactory.getLogger( Sked.LOGGER_NAME );
+    private static final Logger LOGGER = LoggerFactory.getLogger( CronSchedule.class );
     private String expression;
     private transient CronAtom secondAtom;
     private transient CronAtom minuteAtom;
