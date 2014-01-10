@@ -19,7 +19,7 @@ special char and maybe that some other extensions you would like to use are miss
 in this project.
 
 The project is hosted in maven central.
-[here](https://repository.sonatype.org/index.html#nexus-search;quick~sked) you'll find a quick copy/paste for the dependency.
+[Here](https://repository.sonatype.org/index.html#nexus-search;quick~sked) you'll find a quick copy/paste for the dependency.
 
 
 Changelog
