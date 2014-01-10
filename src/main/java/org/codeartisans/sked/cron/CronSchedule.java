@@ -18,7 +18,7 @@
 package org.codeartisans.sked.cron;
 
 import java.io.Serializable;
-import org.joda.time.DateTime;
+import java.util.Calendar;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -103,24 +103,26 @@ public final class CronSchedule
 
     public Long firstRunAfter( Long start )
     {
-        DateTime nextRun = firstRunAfter( new DateTime( start ) );
+        Calendar startCal = Calendar.getInstance();
+        startCal.setTimeInMillis( start );
+        Calendar nextRun = firstRunAfter( startCal );
         if( nextRun == null )
         {
             return null;
         }
-        return nextRun.getMillis();
+        return nextRun.getTimeInMillis();
     }
 
-    private DateTime firstRunAfter( DateTime start )
+    private Calendar firstRunAfter( Calendar start )
     {
         int nil = -1;
 
-        int baseYear = start.getYear();
-        int baseMonth = start.getMonthOfYear();
-        int baseDayOfMonth = start.getDayOfMonth();
-        int baseHour = start.getHourOfDay();
-        int baseMinute = start.getMinuteOfHour();
-        int baseSecond = start.getSecondOfMinute();
+        int baseYear = start.get( Calendar.YEAR );
+        int baseMonth = monthOfYear( start );
+        int baseDayOfMonth = start.get( Calendar.DAY_OF_MONTH );
+        int baseHour = start.get( Calendar.HOUR_OF_DAY );
+        int baseMinute = start.get( Calendar.MINUTE );
+        int baseSecond = start.get( Calendar.SECOND );
 
         int year = baseYear;
         int month = baseMonth;
@@ -227,7 +229,7 @@ public final class CronSchedule
 
             if( dayOfMonth > 28
                 && dateChanged
-                && dayOfMonth > new DateTime( year, month, 15, 12, 0, 0, 0 ).dayOfMonth().getMaximumValue() )
+                && dayOfMonth > daysInMonth( year, month ) )
             {
                 dayOfMonth = nil;
             }
@@ -249,15 +251,15 @@ public final class CronSchedule
             return null;
         }
 
-        DateTime nextTime = new DateTime( year, month, dayOfMonth, hour, minute, second, 0 );
+        Calendar nextTime = dateTime( year, month, dayOfMonth, hour, minute, second, 0 );
 
-        if( loaded().dayOfWeekAtom.nextValue( nextTime.getDayOfWeek() ) == nextTime.getDayOfWeek() )
+        if( loaded().dayOfWeekAtom.nextValue( dayOfWeek( nextTime ) ) == dayOfWeek( nextTime ) )
         {
             LOGGER.trace( "CronSchedule.firstRunAfter({}) Got it! Returning {}", start, nextTime );
             return nextTime;
         }
         LOGGER.trace( "CronSchedule.firstRunAfter({}) Recursion: {} is not acceptable", start, nextTime );
-        return firstRunAfter( new DateTime( year, month, dayOfMonth, 23, 59, 0, 0 ) );
+        return firstRunAfter( dateTime( year, month, dayOfMonth, 23, 59, 0, 0 ) );
     }
 
     @Override
@@ -265,4 +267,75 @@ public final class CronSchedule
     {
         return loaded().expression;
     }
+
+    private static Calendar dateTime( int year, int month, int dayOfMonth,
+                                      int hours, int minutes, int seconds, int millis )
+    {
+        Calendar cal = Calendar.getInstance();
+        cal.set( year, month - 1, dayOfMonth, hours, minutes, seconds );
+        cal.set( Calendar.MILLISECOND, millis );
+        return cal;
+    }
+
+    private static int daysInMonth( int year, int month )
+    {
+        return dateTime( year, month, 15, 12, 0, 0, 0 ).getActualMaximum( Calendar.DAY_OF_MONTH );
+    }
+
+    private static int dayOfWeek( Calendar calendar )
+    {
+        switch( calendar.get( Calendar.DAY_OF_WEEK ) )
+        {
+            case Calendar.MONDAY:
+                return 1;
+            case Calendar.TUESDAY:
+                return 2;
+            case Calendar.WEDNESDAY:
+                return 3;
+            case Calendar.THURSDAY:
+                return 4;
+            case Calendar.FRIDAY:
+                return 5;
+            case Calendar.SATURDAY:
+                return 6;
+            case Calendar.SUNDAY:
+                return 7;
+            default:
+                throw new InternalError( "Something is broken in sked library, please report the issue." );
+        }
+    }
+
+    private static int monthOfYear( Calendar calendar )
+    {
+        switch( calendar.get( Calendar.MONTH ) )
+        {
+            case Calendar.JANUARY:
+                return 1;
+            case Calendar.FEBRUARY:
+                return 2;
+            case Calendar.MARCH:
+                return 3;
+            case Calendar.APRIL:
+                return 4;
+            case Calendar.MAY:
+                return 5;
+            case Calendar.JUNE:
+                return 6;
+            case Calendar.JULY:
+                return 7;
+            case Calendar.AUGUST:
+                return 8;
+            case Calendar.SEPTEMBER:
+                return 9;
+            case Calendar.OCTOBER:
+                return 10;
+            case Calendar.NOVEMBER:
+                return 11;
+            case Calendar.DECEMBER:
+                return 12;
+            default:
+                throw new InternalError( "Something is broken in sked library, please report the issue." );
+        }
+    }
+
 }
