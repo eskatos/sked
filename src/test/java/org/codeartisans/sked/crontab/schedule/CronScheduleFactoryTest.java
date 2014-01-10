@@ -1,26 +1,26 @@
 /*
- *  Copyright 2011 paul.
- * 
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- * 
- *       http://www.apache.org/licenses/LICENSE-2.0
- * 
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- *  under the License.
+ * Copyright (c) 2011-2014, Paul Merlin. All Rights Reserved.
+ *
+ * Licensed  under the  Apache License,  Version 2.0  (the "License");
+ * you may not use  this file  except in  compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed  under the  License is distributed on an "AS IS" BASIS,
+ * WITHOUT  WARRANTIES OR CONDITIONS  OF ANY KIND, either  express  or
+ * implied.
+ *
+ * See the License for the specific language governing permissions and
+ * limitations under the License. 
  */
 package org.codeartisans.sked.crontab.schedule;
 
 import org.joda.time.DateTime;
-
-import static org.codeartisans.junit.Assert.*;
-
 import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 
 // TODO Rewrite tests using fixed dates so the build is predictible
 public class CronScheduleFactoryTest
@@ -39,14 +39,14 @@ public class CronScheduleFactoryTest
     public void testFromDate()
     {
         DateTime date = new DateTime();
-        DateTime expectedDate = new DateTime( ( long ) ( 1000L * Math.ceil( date.getMillis() / 1000 ) ) );
+        DateTime expectedDate = new DateTime( (long) ( 1000L * Math.ceil( date.getMillis() / 1000 ) ) );
 
         String expected = expectedDate.getSecondOfMinute() + " "
-                + expectedDate.getMinuteOfHour() + " "
-                + expectedDate.getHourOfDay() + " "
-                + expectedDate.getDayOfMonth() + " "
-                + expectedDate.getMonthOfYear() + " * "
-                + expectedDate.getYear();
+                          + expectedDate.getMinuteOfHour() + " "
+                          + expectedDate.getHourOfDay() + " "
+                          + expectedDate.getDayOfMonth() + " "
+                          + expectedDate.getMonthOfYear() + " * "
+                          + expectedDate.getYear();
 
         CronScheduleFactory factory = new CronScheduleFactoryImpl();
 
@@ -56,13 +56,13 @@ public class CronScheduleFactoryTest
         int delay = 1;
         cronSchedule = factory.newNowInstance( delay );
         DateTime plusSeconds = expectedDate.plusSeconds( delay );
-        String exprectedPlusSeconds = plusSeconds.getSecondOfMinute() + " "
-                + plusSeconds.getMinuteOfHour() + " "
-                + plusSeconds.getHourOfDay() + " "
-                + plusSeconds.getDayOfMonth() + " "
-                + plusSeconds.getMonthOfYear() + " * "
-                + plusSeconds.getYear();
-        assertEquals( exprectedPlusSeconds, cronSchedule.toString() );
+        String expectedPlusSeconds = plusSeconds.getSecondOfMinute() + " "
+                                     + plusSeconds.getMinuteOfHour() + " "
+                                     + plusSeconds.getHourOfDay() + " "
+                                     + plusSeconds.getDayOfMonth() + " "
+                                     + plusSeconds.getMonthOfYear() + " * "
+                                     + plusSeconds.getYear();
+        assertEquals( expectedPlusSeconds, cronSchedule.toString() );
 
         cronSchedule = factory.newInstance( date.toDate() );
         assertEquals( expected, cronSchedule.toString() );

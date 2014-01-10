@@ -1,15 +1,19 @@
 /*
- * Copyright (c) 2010, Paul Merlin. All Rights Reserved.
+ * Copyright (c) 2010-2014, Paul Merlin. All Rights Reserved.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ * Licensed  under the  Apache License,  Version 2.0  (the "License");
+ * you may not use  this file  except in  compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * distributed  under the  License is distributed on an "AS IS" BASIS,
+ * WITHOUT  WARRANTIES OR CONDITIONS  OF ANY KIND, either  express  or
+ * implied.
  *
+ * See the License for the specific language governing permissions and
+ * limitations under the License. 
  */
 package org.codeartisans.sked.crontab.schedule;
 
@@ -18,28 +22,29 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
 
-/**
- * @author Paul Merlin
- */
-final class CronScheduleUtil
+/* package */ final class CronScheduleUtil
 {
-
-    static String[] validateAndSplitExpression( String cronExpression )
+    /* package */ static String[] validateAndSplitExpression( String cronExpression )
     {
-        if ( cronExpression == null || cronExpression.length() <= 0 ) {
+        if( cronExpression == null || cronExpression.length() <= 0 )
+        {
             throw new IllegalArgumentException( "Cron expression is null or empty" );
         }
-        if ( cronExpression.length() != cronExpression.trim().length() ) {
+        if( cronExpression.length() != cronExpression.trim().length() )
+        {
             throw new IllegalArgumentException( "Cron expression has heading or trailing spaces" );
         }
         String[] splittedExpression = CronScheduleUtil.split( CronScheduleUtil.parseSpecialStrings( cronExpression ) );
-        if ( splittedExpression.length != 7 ) {
+        if( splittedExpression.length != 7 )
+        {
             throw new IllegalArgumentException( "Cron expression did not resolve to a 7 atoms expression" );
         }
-        for ( int idx = 0; idx < splittedExpression.length; idx++ ) {
+        for( int idx = 0; idx < splittedExpression.length; idx++ )
+        {
             String atom = splittedExpression[idx];
             String regex;
-            switch ( idx ) {
+            switch( idx )
+            {
                 case 0: // second
                 case 1: // minute
                 case 2: // hour
@@ -64,24 +69,26 @@ final class CronScheduleUtil
                 default:
                     throw new IllegalStateException( "Guru meditation!" );
             }
-            if ( atom.replaceAll( regex, "" ).trim().length() > 0 ) {
+            if( atom.replaceAll( regex, "" ).trim().length() > 0 )
+            {
                 throw new IllegalArgumentException( "String atom contains unauthorized characaters: " + atom );
             }
         }
         return splittedExpression;
     }
 
-    static final String YEARLY_SPECIAL = "@yearly";
-    static final String ANNUALY_SPECIAL = "@annualy";
-    static final String MONTHLY_SPECIAL = "@monthly";
-    static final String WEEKLY_SPECIAL = "@weekly";
-    static final String DAILY_SPECIAL = "@daily";
-    static final String MIDNIGHT_SPECIAL = "@midnight";
-    static final String HOURLY_SPECIAL = "@hourly";
-    static final String MINUTELY_SPECIAL = "@minutely";
-    static final Map<String, String> SPECIAL_STRINGS;
+    private static final String YEARLY_SPECIAL = "@yearly";
+    private static final String ANNUALY_SPECIAL = "@annualy";
+    private static final String MONTHLY_SPECIAL = "@monthly";
+    private static final String WEEKLY_SPECIAL = "@weekly";
+    private static final String DAILY_SPECIAL = "@daily";
+    private static final String MIDNIGHT_SPECIAL = "@midnight";
+    private static final String HOURLY_SPECIAL = "@hourly";
+    private static final String MINUTELY_SPECIAL = "@minutely";
+    private static final Map<String, String> SPECIAL_STRINGS;
 
-    static {
+    static
+    {
         Map<String, String> specialStrings = new HashMap<String, String>();
         specialStrings.put( YEARLY_SPECIAL, "0 0 0 1 1 *" );
         specialStrings.put( ANNUALY_SPECIAL, "0 0 0 1 1 *" );
@@ -99,7 +106,8 @@ final class CronScheduleUtil
     private static String[] split( String cronExpression )
     {
         String[] splittedExpression = cronExpression.split( SPLIT_REGEX );
-        if ( splittedExpression.length == 6 ) {
+        if( splittedExpression.length == 6 )
+        {
             return ( cronExpression + " *" ).split( SPLIT_REGEX ); // Adding optional year
         }
         return splittedExpression;
@@ -108,7 +116,8 @@ final class CronScheduleUtil
     private static String parseSpecialStrings( String cronExpression )
     {
         String specialString = SPECIAL_STRINGS.get( cronExpression );
-        if ( specialString == null ) {
+        if( specialString == null )
+        {
             return cronExpression;
         }
         return specialString;
@@ -128,7 +137,7 @@ final class CronScheduleUtil
     private static final Pattern DEC = Pattern.compile( "dec", Pattern.CASE_INSENSITIVE );
 
     @SuppressWarnings( "AssignmentToMethodParameter" )
-    static String replaceMonthNames( String atom )
+    private static String replaceMonthNames( String atom )
     {
         atom = JAN.matcher( atom ).replaceAll( "1" );
         atom = FEB.matcher( atom ).replaceAll( "2" );
@@ -154,7 +163,7 @@ final class CronScheduleUtil
     private static final Pattern SUN = Pattern.compile( "sun", Pattern.CASE_INSENSITIVE );
 
     @SuppressWarnings( "AssignmentToMethodParameter" )
-    static String replaceDayOfWeekNames( String atom )
+    private static String replaceDayOfWeekNames( String atom )
     {
         atom = MON.matcher( atom ).replaceAll( "1" );
         atom = TUE.matcher( atom ).replaceAll( "2" );
@@ -169,5 +178,4 @@ final class CronScheduleUtil
     private CronScheduleUtil()
     {
     }
-
 }

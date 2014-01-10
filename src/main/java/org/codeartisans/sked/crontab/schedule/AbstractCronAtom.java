@@ -1,15 +1,19 @@
 /*
- * Copyright (c) 2010, Paul Merlin. All Rights Reserved.
+ * Copyright (c) 2010-2014, Paul Merlin. All Rights Reserved.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ * Licensed  under the  Apache License,  Version 2.0  (the "License");
+ * you may not use  this file  except in  compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * distributed  under the  License is distributed on an "AS IS" BASIS,
+ * WITHOUT  WARRANTIES OR CONDITIONS  OF ANY KIND, either  express  or
+ * implied.
  *
+ * See the License for the specific language governing permissions and
+ * limitations under the License. 
  */
 package org.codeartisans.sked.crontab.schedule;
 
@@ -17,16 +21,15 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 @SuppressWarnings( "ProtectedField" )
-abstract class AbstractCronAtom
-        implements CronAtom
+/* package */ abstract class AbstractCronAtom
+    implements CronAtom
 {
-
     protected final String atom;
     protected final SortedSet<Integer> possibleValues = new TreeSet<Integer>();
     private boolean ommited = false;
 
     @SuppressWarnings( "OverridableMethodCallInConstructor" ) // The class hierarchy is stable as all chidren in this package are final
-    public AbstractCronAtom( String atom )
+    /* package */ AbstractCronAtom( String atom )
     {
         this.atom = atom;
         parseAtom();
@@ -35,57 +38,62 @@ abstract class AbstractCronAtom
     @SuppressWarnings( "AssignmentToForLoopParameter" )
     private void parseAtom()
     {
-        if ( "?".equals( atom ) ) {
-            if ( !canBeOmmited() ) {
+        if( "?".equals( atom ) )
+        {
+            if( !canBeOmmited() )
+            {
                 throw new IllegalArgumentException( "? is not allowed in this field" );
             }
-
             // Ommited
             ommited = true;
-
-        } else if ( "*".equals( atom ) ) {
-
+        }
+        else if( "*".equals( atom ) )
+        {
             // All values
             addRangeToPossibleValues( minAllowed(), maxAllowed() );
-
-        } else if ( !containsSpecialChars( atom ) ) {
-
+        }
+        else if( !containsSpecialChars( atom ) )
+        {
             // Simple numeric value
             possibleValues.add( Integer.valueOf( atom ) );
-
-        } else {
+        }
+        else
+        {
             String[] subAtomSet = atom.split( "," );
-            for ( String subAtom : subAtomSet ) {
+            for( String subAtom : subAtomSet )
+            {
                 int step = 1;
                 int stepMarkerIndex = subAtom.indexOf( "/" );
-                if ( stepMarkerIndex > 0 ) { // Stepped atom
+                if( stepMarkerIndex > 0 )
+                {
+                    // Stepped atom
                     step = Integer.valueOf( subAtom.substring( stepMarkerIndex + 1 ) );
                     subAtom = subAtom.substring( 0, stepMarkerIndex );
                 }
-                if ( "*".equals( subAtom ) ) {
-
+                if( "*".equals( subAtom ) )
+                {
                     // */step atom
                     addSteppedRangeToPossibleValues( minAllowed(), maxAllowed(), step );
-
-                } else if ( subAtom.contains( "-" ) ) {
-
+                }
+                else if( subAtom.contains( "-" ) )
+                {
                     // <range> atom maybe stepped
                     int rangeMarkerIndex = subAtom.indexOf( "-" );
                     int start = Integer.valueOf( subAtom.substring( 0, rangeMarkerIndex ) );
                     int stop = Integer.valueOf( subAtom.substring( rangeMarkerIndex + 1 ) );
                     addSteppedRangeToPossibleValues( start, stop, step );
-
-                } else {
-                    if ( step == 1 ) {
-
+                }
+                else
+                {
+                    if( step == 1 )
+                    {
                         // SubAtom is a simple numeric value
                         possibleValues.add( Integer.valueOf( subAtom ) );
-
-                    } else {
-
+                    }
+                    else
+                    {
                         // SubAtom <number>/<step> means start a range at <number> and use <step>
                         addSteppedRangeToPossibleValues( Integer.valueOf( subAtom ), maxAllowed(), step );
-
                     }
                 }
             }
@@ -111,7 +119,8 @@ abstract class AbstractCronAtom
     public int nextValue( int start )
     {
         SortedSet<Integer> tail = possibleValues.tailSet( start );
-        if ( tail.isEmpty() ) {
+        if( tail.isEmpty() )
+        {
             return -1;
         }
         return tail.first();
@@ -126,10 +135,17 @@ abstract class AbstractCronAtom
     @Override
     public abstract int maxAllowed();
 
+    private static final char[] SPECIAL_CHARS = new char[]
+    {
+        '*', ',', '/', '-'
+    };
+
     private boolean containsSpecialChars( String atom )
     {
-        for ( String eachSpecialChars : new String[]{ "*", ",", "/", "-" } ) {
-            if ( atom.contains( eachSpecialChars ) ) {
+        for( char specialChar : SPECIAL_CHARS )
+        {
+            if( atom.indexOf( specialChar ) != -1 )
+            {
                 return true;
             }
         }
@@ -143,7 +159,8 @@ abstract class AbstractCronAtom
 
     private void addSteppedRangeToPossibleValues( int start, int stop, int step )
     {
-        for ( int idx = start; idx <= stop; idx += step ) {
+        for( int idx = start; idx <= stop; idx += step )
+        {
             possibleValues.add( idx );
         }
     }
@@ -156,5 +173,4 @@ abstract class AbstractCronAtom
     {
         return atom;
     }
-
 }

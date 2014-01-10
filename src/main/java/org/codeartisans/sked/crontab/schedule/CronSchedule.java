@@ -1,24 +1,25 @@
 /*
- * Copyright (c) 2010, Paul Merlin. All Rights Reserved.
+ * Copyright (c) 2010-2014, Paul Merlin. All Rights Reserved.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ * Licensed  under the  Apache License,  Version 2.0  (the "License");
+ * you may not use  this file  except in  compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * distributed  under the  License is distributed on an "AS IS" BASIS,
+ * WITHOUT  WARRANTIES OR CONDITIONS  OF ANY KIND, either  express  or
+ * implied.
  *
+ * See the License for the specific language governing permissions and
+ * limitations under the License. 
  */
 package org.codeartisans.sked.crontab.schedule;
 
 import java.io.Serializable;
-
 import org.codeartisans.sked.Sked;
-
 import org.joda.time.DateTime;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,15 +41,17 @@ import org.slf4j.LoggerFactory;
  * in this project.
  */
 public final class CronSchedule
-        implements Serializable
+    implements Serializable
 {
-
     public static boolean isExpressionValid( String cronExpression )
     {
-        try {
+        try
+        {
             CronScheduleUtil.validateAndSplitExpression( cronExpression );
             return true;
-        } catch ( IllegalArgumentException ex ) {
+        }
+        catch( IllegalArgumentException ex )
+        {
         }
         return false;
     }
@@ -62,7 +65,7 @@ public final class CronSchedule
     private transient CronAtom monthAtom;
     private transient CronAtom dayOfWeekAtom;
     private transient CronAtom yearAtom;
-    private boolean loaded = false;
+    private transient boolean loaded = false;
 
     public CronSchedule( String cronExpression )
     {
@@ -71,7 +74,8 @@ public final class CronSchedule
 
     private CronSchedule loaded()
     {
-        if ( !loaded ) {
+        if( !loaded )
+        {
             load( expression );
             loaded = true;
         }
@@ -88,19 +92,21 @@ public final class CronSchedule
         monthAtom = new MonthAtom( splitted[4] );
         dayOfWeekAtom = new DayOfWeekAtom( splitted[5] );
         yearAtom = new YearAtom( splitted[6] );
-        expression = new StringBuilder().append( secondAtom ).append( " " ).
-                append( minuteAtom ).append( " " ).
-                append( hourAtom ).append( " " ).
-                append( dayOfMonthAtom ).append( " " ).
-                append( monthAtom ).append( " " ).
-                append( dayOfWeekAtom ).append( " " ).
-                append( yearAtom ).toString();
+        expression = new StringBuilder().
+            append( secondAtom ).append( " " ).
+            append( minuteAtom ).append( " " ).
+            append( hourAtom ).append( " " ).
+            append( dayOfMonthAtom ).append( " " ).
+            append( monthAtom ).append( " " ).
+            append( dayOfWeekAtom ).append( " " ).
+            append( yearAtom ).toString();
     }
 
     public Long firstRunAfter( Long start )
     {
         DateTime nextRun = firstRunAfter( new DateTime( start ) );
-        if ( nextRun == null ) {
+        if( nextRun == null )
+        {
             return null;
         }
         return nextRun.getMillis();
@@ -126,44 +132,53 @@ public final class CronSchedule
 
         // Second
         second = loaded().secondAtom.nextValue( second );
-        if ( second == nil ) {
-
+        if( second == nil )
+        {
             second = loaded().secondAtom.minAllowed();
             minute++;
 
             LOGGER.trace( "CronSchedule.firstRunAfter({}) nextSecond was -1, set to {} and minute to {}",
-                          new Object[]{ start, second, minute } );
-        } else {
+                          start, second, minute );
+        }
+        else
+        {
             LOGGER.trace( "CronSchedule.firstRunAfter({}) nextSecond is {}", start, second );
         }
 
         // Minute
         minute = loaded().minuteAtom.nextValue( minute );
-        if ( minute == nil ) {
-
+        if( minute == nil )
+        {
             second = loaded().secondAtom.minAllowed();
             minute = loaded().minuteAtom.minAllowed();
             hour++;
 
             LOGGER.trace( "CronSchedule.firstRunAfter({}) nextMinute was -1, set to {}, second to {} and hour to {}",
-                          new Object[]{ start, minute, second, hour } );
-        } else if ( minute > baseMinute ) {
-
+                          start, minute, second, hour );
+        }
+        else if( minute > baseMinute )
+        {
             second = loaded().secondAtom.minAllowed();
 
-            LOGGER.trace( "CronSchedule.firstRunAfter({}) nextMinute was before baseMinute, set second to {}", start, second );
-        } else {
+            LOGGER.trace( "CronSchedule.firstRunAfter({}) nextMinute was before baseMinute, set second to {}",
+                          start, second );
+        }
+        else
+        {
             LOGGER.trace( "CronSchedule.firstRunAfter({}) nextMinute is {}", start, minute );
         }
 
         // Hour
         hour = loaded().hourAtom.nextValue( hour );
-        if ( hour == nil ) {
+        if( hour == nil )
+        {
             second = loaded().secondAtom.minAllowed();
             minute = loaded().minuteAtom.minAllowed();
             hour = loaded().hourAtom.minAllowed();
             dayOfMonth++;
-        } else if ( hour > baseHour ) {
+        }
+        else if( hour > baseHour )
+        {
             second = loaded().secondAtom.minAllowed();
             minute = loaded().minuteAtom.minAllowed();
         }
@@ -171,14 +186,18 @@ public final class CronSchedule
         // DayOfMonth
         dayOfMonth = loaded().dayOfMonthAtom.nextValue( dayOfMonth );
         boolean retry = true;
-        while ( retry ) {
-            if ( dayOfMonth == nil ) {
+        while( retry )
+        {
+            if( dayOfMonth == nil )
+            {
                 second = loaded().secondAtom.minAllowed();
                 minute = loaded().minuteAtom.minAllowed();
                 hour = loaded().hourAtom.minAllowed();
                 dayOfMonth = loaded().dayOfMonthAtom.minAllowed();
                 month++;
-            } else if ( dayOfMonth > baseDayOfMonth ) {
+            }
+            else if( dayOfMonth > baseDayOfMonth )
+            {
                 second = loaded().secondAtom.minAllowed();
                 minute = loaded().minuteAtom.minAllowed();
                 hour = loaded().hourAtom.minAllowed();
@@ -186,42 +205,55 @@ public final class CronSchedule
 
             // Month
             month = loaded().monthAtom.nextValue( month );
-            if ( month == nil ) {
+            if( month == nil )
+            {
                 second = loaded().secondAtom.minAllowed();
                 minute = loaded().minuteAtom.minAllowed();
                 hour = loaded().hourAtom.minAllowed();
                 dayOfMonth = loaded().dayOfMonthAtom.minAllowed();
                 month = loaded().monthAtom.minAllowed();
                 year++;
-            } else if ( month > baseMonth ) {
+            }
+            else if( month > baseMonth )
+            {
                 second = loaded().secondAtom.minAllowed();
                 minute = loaded().minuteAtom.minAllowed();
                 hour = loaded().hourAtom.minAllowed();
                 dayOfMonth = loaded().dayOfMonthAtom.minAllowed();
             }
 
-            boolean dateChanged = dayOfMonth != baseDayOfMonth || month != baseMonth || year != baseYear;
+            boolean dateChanged = dayOfMonth != baseDayOfMonth
+                                  || month != baseMonth
+                                  || year != baseYear;
 
-            if ( dayOfMonth > 28 && dateChanged && dayOfMonth > new DateTime( year, month, 15, 12, 0, 0, 0 ).dayOfMonth().getMaximumValue() ) {
+            if( dayOfMonth > 28
+                && dateChanged
+                && dayOfMonth > new DateTime( year, month, 15, 12, 0, 0, 0 ).dayOfMonth().getMaximumValue() )
+            {
                 dayOfMonth = nil;
-            } else {
+            }
+            else
+            {
                 retry = false;
             }
 
-            if ( retry && LOGGER.isTraceEnabled() ) {
+            if( retry && LOGGER.isTraceEnabled() )
+            {
                 LOGGER.trace( "CronSchedule.firstRunAfter({}) DayOfMonth retry", start );
             }
-
         }
 
-        if ( year > loaded().yearAtom.maxAllowed() ) {
-            LOGGER.trace( "CronSchedule.firstRunAfter({}) Resolved is out of scope, returning null", start ); // FIXME Better log message
+        if( year > loaded().yearAtom.maxAllowed() )
+        {
+            // FIXME Better log message
+            LOGGER.trace( "CronSchedule.firstRunAfter({}) Resolved is out of scope, returning null", start );
             return null;
         }
 
         DateTime nextTime = new DateTime( year, month, dayOfMonth, hour, minute, second, 0 );
 
-        if ( loaded().dayOfWeekAtom.nextValue( nextTime.getDayOfWeek() ) == nextTime.getDayOfWeek() ) {
+        if( loaded().dayOfWeekAtom.nextValue( nextTime.getDayOfWeek() ) == nextTime.getDayOfWeek() )
+        {
             LOGGER.trace( "CronSchedule.firstRunAfter({}) Got it! Returning {}", start, nextTime );
             return nextTime;
         }
@@ -234,5 +266,4 @@ public final class CronSchedule
     {
         return loaded().expression;
     }
-
 }
