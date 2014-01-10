@@ -15,12 +15,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License. 
  */
-package org.codeartisans.sked.crontab.schedule;
+package org.codeartisans.sked.cron;
 
-/* package */ final class SecondAtom
+/* package */ final class DayOfWeekAtom
     extends AbstractCronAtom
 {
-    /* package */ SecondAtom( String atom )
+    /* package */ DayOfWeekAtom( String atom )
     {
         super( atom );
     }
@@ -28,17 +28,23 @@ package org.codeartisans.sked.crontab.schedule;
     @Override
     public int maxAllowed()
     {
-        return 59;
+        return 7;
     }
 
     @Override
-    public int nextValue( int start )
+    protected void afterParseAtom()
     {
-        // Special here because second is the base atom
-        if( possibleValues.size() == 1 && possibleValues.first().equals( start ) )
+        // O and 7 are the same day of week, prefer 7 as it is the one used by Date
+        if( possibleValues.contains( 0 ) )
         {
-            return -1;
+            possibleValues.remove( 0 );
+            possibleValues.add( 7 );
         }
-        return super.nextValue( start );
+    }
+
+    @Override
+    protected boolean canBeOmmited()
+    {
+        return true;
     }
 }

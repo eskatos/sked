@@ -15,31 +15,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License. 
  */
-package org.codeartisans.sked.crontab.schedule;
+package org.codeartisans.sked.cron;
 
-/* package */ final class DayOfMonthAtom
+/* package */ final class SecondAtom
     extends AbstractCronAtom
 {
-    /* package */ DayOfMonthAtom( String atom )
+    /* package */ SecondAtom( String atom )
     {
         super( atom );
     }
 
     @Override
-    public int minAllowed()
-    {
-        return 1;
-    }
-
-    @Override
     public int maxAllowed()
     {
-        return 31;
+        return 59;
     }
 
     @Override
-    protected boolean canBeOmmited()
+    public int nextValue( int start )
     {
-        return true;
+        // Special here because second is the base atom
+        if( possibleValues.size() == 1 && possibleValues.first().equals( start ) )
+        {
+            return -1;
+        }
+        return super.nextValue( start );
     }
 }

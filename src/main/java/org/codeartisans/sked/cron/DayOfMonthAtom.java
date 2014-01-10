@@ -15,29 +15,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License. 
  */
-package org.codeartisans.sked.crontab;
+package org.codeartisans.sked.cron;
 
-import java.util.Comparator;
-import java.util.TreeMap;
-import org.codeartisans.sked.crontab.schedule.CronSchedule;
-
-public class CrontabImpl
-    extends TreeMap<CronSchedule, Runnable>
-    implements Crontab
+/* package */ final class DayOfMonthAtom
+    extends AbstractCronAtom
 {
-    private static final long serialVersionUID = 1L;
-
-    public CrontabImpl()
+    /* package */ DayOfMonthAtom( String atom )
     {
-        super( new Comparator<CronSchedule>()
-        {
-            @Override
-            public int compare( CronSchedule o1, CronSchedule o2 )
-            {
-                long now = System.currentTimeMillis();
-                return o1.firstRunAfter( now ).compareTo( o2.firstRunAfter( now ) );
-            }
-        } );
+        super( atom );
     }
 
+    @Override
+    public int minAllowed()
+    {
+        return 1;
+    }
+
+    @Override
+    public int maxAllowed()
+    {
+        return 31;
+    }
+
+    @Override
+    protected boolean canBeOmmited()
+    {
+        return true;
+    }
 }

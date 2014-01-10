@@ -15,19 +15,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License. 
  */
-package org.codeartisans.sked.crontab.schedule;
+package org.codeartisans.sked.cron;
 
-/* package */ final class HourAtom
+/* package */ final class MonthAtom
     extends AbstractCronAtom
 {
-    /* package */ HourAtom( String atom )
+    /* package */ MonthAtom( String atom )
     {
         super( atom );
     }
 
     @Override
+    public int minAllowed()
+    {
+        return 1;
+    }
+
+    @Override
     public int maxAllowed()
     {
-        return 23;
+        return 12;
     }
 }

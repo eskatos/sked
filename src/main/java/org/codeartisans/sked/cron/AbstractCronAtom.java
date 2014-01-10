@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License. 
  */
-package org.codeartisans.sked.crontab.schedule;
+package org.codeartisans.sked.cron;
 
 import java.util.SortedSet;
 import java.util.TreeSet;

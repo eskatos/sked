@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2014, Paul Merlin. All Rights Reserved.
+ * Copyright (c) 2011-2014, Paul Merlin. All Rights Reserved.
  *
  * Licensed  under the  Apache License,  Version 2.0  (the "License");
  * you may not use  this file  except in  compliance with the License.
@@ -15,14 +15,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License. 
  */
-package org.codeartisans.sked.crontab;
+package org.codeartisans.sked.cron;
 
-import java.io.Reader;
-import java.io.Writer;
+import java.util.Date;
 
-public interface CrontabIO
+/**
+ * Produces CronSchedule instances.
+ *
+ * WARN: When using timestamps or dates they are rounded up by seconds.
+ */
+public interface CronScheduleFactory
 {
-    Crontab load( Reader in );
+    CronSchedule newInstance( String cronExpression );
 
-    void save( Writer out );
+    CronSchedule newNowInstance();
+
+    CronSchedule newNowInstance( int initialSecondsDelay );
+
+    CronSchedule newInstance( Date date );
+
+    CronSchedule newInstance( long timestamp );
 }

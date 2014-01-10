@@ -15,23 +15,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License. 
  */
-package org.codeartisans.sked.crontab;
+package org.codeartisans.sked.cron;
 
-import java.io.Serializable;
-import java.util.SortedMap;
-import org.codeartisans.sked.crontab.schedule.CronSchedule;
-
-/**
- * Collection of CronSchedule and Runnables.
- *
- * Things to know:
- * <ul>
- *  <li></li>
- *  <li></li>
- * </ul>
- *
- */
-public interface Crontab
-    extends SortedMap<CronSchedule, Runnable>, Serializable
+/* package */ final class MinuteAtom
+    extends AbstractCronAtom
 {
+    /* package */ MinuteAtom( String atom )
+    {
+        super( atom );
+    }
+
+    @Override
+    public int maxAllowed()
+    {
+        return 59;
+    }
 }
