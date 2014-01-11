@@ -4,31 +4,42 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
     <title>sked by eskatos</title>
-
     <link rel="stylesheet" href="stylesheets/styles.css">
     <link rel="stylesheet" href="stylesheets/pygment_trac.css">
-    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script src="javascripts/respond.js"></script>
     <!--[if lt IE 9]>
-    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
+    <!--[if lt IE 8]>
+    <link rel="stylesheet" href="stylesheets/ie.css">
+    <![endif]-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
   </head>
   <body>
+      <div id="header">
+        <nav>
+          <li class="fork"><a href="https://github.com/eskatos/sked">View On GitHub</a></li>
+          <li class="downloads"><a href="https://github.com/eskatos/sked/zipball/master">ZIP</a></li>
+          <li class="downloads"><a href="https://github.com/eskatos/sked/tarball/master">TAR</a></li>
+          <li class="title">DOWNLOADS</li>
+        </nav>
+      </div><!-- end header -->
+
     <div class="wrapper">
-      <header>
-        <h1>sked</h1>
-        <p>sked contains java code related to scheduling</p>
 
-        <p class="view"><a href="https://github.com/eskatos/sked">View the Project on GitHub <small>eskatos/sked</small></a></p>
-
-
-        <ul>
-          <li><a href="https://github.com/eskatos/sked/zipball/master">Download <strong>ZIP File</strong></a></li>
-          <li><a href="https://github.com/eskatos/sked/tarball/master">Download <strong>TAR Ball</strong></a></li>
-          <li><a href="https://github.com/eskatos/sked">View On <strong>GitHub</strong></a></li>
-        </ul>
-      </header>
       <section>
-        <h1>sked</h1>
+        <div id="title">
+          <h1>sked</h1>
+          <p>sked contains java code related to scheduling</p>
+          <hr>
+          <span class="credits left">Project maintained by <a href="https://github.com/eskatos">eskatos</a></span>
+          <span class="credits right">Hosted on GitHub Pages &mdash; Theme by <a href="https://twitter.com/michigangraham">mattgraham</a></span>
+        </div>
+
+        <h1>
+<a name="sked" class="anchor" href="#sked"><span class="octicon octicon-link"></span></a>sked</h1>
 
 <p>sked contains java code related to scheduling.</p>
 
@@ -48,31 +59,39 @@ special char and maybe that some other extensions you would like to use are miss
 in this project.</p>
 
 <p>The project is hosted in maven central.
-<a href="https://repository.sonatype.org/index.html#nexus-search;quick%7Esked">here</a> you'll find a quick copy/paste for the dependency.</p>
+<a href="https://repository.sonatype.org/index.html#nexus-search;quick%7Esked">Here</a> you'll find a quick copy/paste for the dependency.</p>
 
-<h2>Changelog</h2>
+<h2>
+<a name="changelog" class="anchor" href="#changelog"><span class="octicon octicon-link"></span></a>Changelog</h2>
 
-<h3>sked-1.2 - Released 2011/02/07</h3>
+<h3>
+<a name="sked-20---released-20140111" class="anchor" href="#sked-20---released-20140111"><span class="octicon octicon-link"></span></a>sked-2.0 - Released 2014/01/11</h3>
+
+<ul>
+<li>Removed Joda-Time dependency, now using plain old java.util.Calendar only</li>
+<li>Changed package!</li>
+<li>Minor optimisations</li>
+</ul><h3>
+<a name="sked-12---released-20110207" class="anchor" href="#sked-12---released-20110207"><span class="octicon octicon-link"></span></a>sked-1.2 - Released 2011/02/07</h3>
 
 <ul>
 <li>Added a CronScheduleFactory with convenience methods to ease cron expression generation</li>
 <li>CronSchedule instances are now Serializable.</li>
-</ul><h3>sked-1.1 - Released 2010/12/31</h3>
+</ul><h3>
+<a name="sked-11---released-20101231" class="anchor" href="#sked-11---released-20101231"><span class="octicon octicon-link"></span></a>sked-1.1 - Released 2010/12/31</h3>
 
 <ul>
 <li>Fixed a corner case bug in CronSchedule.firstRunAfter( timestamp ) when timestamp is less than a second ahead of previous run</li>
-</ul><h3>sked-1.0 - Released 2010/12/12</h3>
+</ul><h3>
+<a name="sked-10---released-20101212" class="anchor" href="#sked-10---released-20101212"><span class="octicon octicon-link"></span></a>sked-1.0 - Released 2010/12/12</h3>
 
 <ul>
 <li>Initial release, <em>do not use</em>, contains a bug fixed in 1.1</li>
 </ul>
       </section>
-      <footer>
-        <p>This project is maintained by <a href="https://github.com/eskatos">eskatos</a></p>
-        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
-      </footer>
+
     </div>
-    <script src="javascripts/scale.fix.js"></script>
+    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
               <script type="text/javascript">
             var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
             document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
