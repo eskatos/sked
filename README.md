@@ -25,6 +25,12 @@ The project is hosted in maven central.
 Changelog
 ---------
 
+### sked-2.0 - Released 2014/01/11
+
+- Removed Joda-Time dependency, now using plain old java.util.Calendar only
+- Changed package!
+- Minor optimisations
+
 ### sked-1.2 - Released 2011/02/07
 
 - Added a CronScheduleFactory with convenience methods to ease cron expression generation
