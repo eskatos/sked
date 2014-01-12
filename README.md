@@ -25,6 +25,11 @@ The project is hosted in maven central.
 Changelog
 ---------
 
+### sked-2.1 - Released 2014/01/12
+
+- Made SLF4J dependency optional
+- Starting with this version, sked has zero dependencies
+
 ### sked-2.0 - Released 2014/01/11
 
 - Removed Joda-Time dependency, now using plain old java.util.Calendar only
