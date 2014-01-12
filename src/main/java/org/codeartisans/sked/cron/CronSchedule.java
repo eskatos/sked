@@ -19,8 +19,6 @@ package org.codeartisans.sked.cron;
 
 import java.io.Serializable;
 import java.util.Calendar;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Cron expression parsing is based on the GNU crontab manpage that can be found
@@ -55,7 +53,6 @@ public final class CronSchedule
         return false;
     }
 
-    private static final Logger LOGGER = LoggerFactory.getLogger( CronSchedule.class );
     private String expression;
     private transient CronAtom secondAtom;
     private transient CronAtom minuteAtom;
@@ -138,12 +135,12 @@ public final class CronSchedule
             second = loaded().secondAtom.minAllowed();
             minute++;
 
-            LOGGER.trace( "CronSchedule.firstRunAfter({}) nextSecond was -1, set to {} and minute to {}",
+            Logger.trace( "CronSchedule.firstRunAfter({}) nextSecond was -1, set to {} and minute to {}",
                           start, second, minute );
         }
         else
         {
-            LOGGER.trace( "CronSchedule.firstRunAfter({}) nextSecond is {}", start, second );
+            Logger.trace( "CronSchedule.firstRunAfter({}) nextSecond is {}", start, second );
         }
 
         // Minute
@@ -154,19 +151,19 @@ public final class CronSchedule
             minute = loaded().minuteAtom.minAllowed();
             hour++;
 
-            LOGGER.trace( "CronSchedule.firstRunAfter({}) nextMinute was -1, set to {}, second to {} and hour to {}",
+            Logger.trace( "CronSchedule.firstRunAfter({}) nextMinute was -1, set to {}, second to {} and hour to {}",
                           start, minute, second, hour );
         }
         else if( minute > baseMinute )
         {
             second = loaded().secondAtom.minAllowed();
 
-            LOGGER.trace( "CronSchedule.firstRunAfter({}) nextMinute was before baseMinute, set second to {}",
+            Logger.trace( "CronSchedule.firstRunAfter({}) nextMinute was before baseMinute, set second to {}",
                           start, second );
         }
         else
         {
-            LOGGER.trace( "CronSchedule.firstRunAfter({}) nextMinute is {}", start, minute );
+            Logger.trace( "CronSchedule.firstRunAfter({}) nextMinute is {}", start, minute );
         }
 
         // Hour
@@ -238,16 +235,16 @@ public final class CronSchedule
                 retry = false;
             }
 
-            if( retry && LOGGER.isTraceEnabled() )
+            if( retry )
             {
-                LOGGER.trace( "CronSchedule.firstRunAfter({}) DayOfMonth retry", start );
+                Logger.trace( "CronSchedule.firstRunAfter({}) DayOfMonth retry", start );
             }
         }
 
         if( year > loaded().yearAtom.maxAllowed() )
         {
             // FIXME Better log message
-            LOGGER.trace( "CronSchedule.firstRunAfter({}) Resolved is out of scope, returning null", start );
+            Logger.trace( "CronSchedule.firstRunAfter({}) Resolved is out of scope, returning null", start );
             return null;
         }
 
@@ -255,10 +252,10 @@ public final class CronSchedule
 
         if( loaded().dayOfWeekAtom.nextValue( dayOfWeek( nextTime ) ) == dayOfWeek( nextTime ) )
         {
-            LOGGER.trace( "CronSchedule.firstRunAfter({}) Got it! Returning {}", start, nextTime );
+            Logger.trace( "CronSchedule.firstRunAfter({}) Got it! Returning {}", start, nextTime );
             return nextTime;
         }
-        LOGGER.trace( "CronSchedule.firstRunAfter({}) Recursion: {} is not acceptable", start, nextTime );
+        Logger.trace( "CronSchedule.firstRunAfter({}) Recursion: {} is not acceptable", start, nextTime );
         return firstRunAfter( dateTime( year, month, dayOfMonth, 23, 59, 0, 0 ) );
     }
 
