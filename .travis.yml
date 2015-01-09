@@ -1,0 +1,8 @@
+os: linux
+sudo: false
+
+language: java
+
+jdk:
+  - oraclejdk8
+  - oraclejdk7
