@@ -1,6 +1,10 @@
 os: linux
 sudo: false
 
+cache:
+    directories:
+        - ~/.m2/repository
+
 language: java
 
 jdk:
