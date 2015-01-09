@@ -14,7 +14,7 @@
 
     <name>${project.artifactId}</name>
     <packaging>jar</packaging>
-    <url>http://github.com/Codeartisans/sked</url>
+    <url>http://github.com/eskatos/sked</url>
 
     <dependencies>
 
