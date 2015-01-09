@@ -1,6 +1,8 @@
 sked
 ====
 
+[![Build Status](https://travis-ci.org/eskatos/sked.svg)](https://travis-ci.org/eskatos/sked)
+
 sked contains java code related to scheduling.
 
 Cron expression parsing is based on the GNU crontab manpage that can be found
