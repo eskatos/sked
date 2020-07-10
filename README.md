@@ -1,13 +1,13 @@
 sked
 ====
 
-[![Build Status](https://travis-ci.org/eskatos/sked.svg)](https://travis-ci.org/eskatos/sked)
+![CI](https://github.com/eskatos/sked/workflows/CI/badge.svg?branch=master)
 
 sked contains java code related to scheduling.
 
 Cron expression parsing is based on the GNU crontab manpage that can be found
 here: http://unixhelp.ed.ac.uk/CGI/man-cgi?crontab+5
- 
+
 The following extensions are used:
 
 - a mandatory field is added at the begining: seconds.
@@ -50,4 +50,3 @@ Changelog
 ### sked-1.0 - Released 2010/12/12
 
 - Initial release, *do not use*, contains a bug fixed in 1.1
-
